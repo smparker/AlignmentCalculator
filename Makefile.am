@@ -1,0 +1,4 @@
+SUBDIRS = src
+ACLOCAL_AMFLAGS = -I m4
+
+AM_LDFLAGS = -lboost_system$(BOOST_LIB_SUFFIX)

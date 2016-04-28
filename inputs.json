@@ -1,0 +1,48 @@
+{
+  "Jobtype":"adiabatic", // "adiabatic" or "nonadiabatic"
+  "Molecule":
+  {
+    "molecule_name":"N2", // For file management
+    "library_file":"SymTopMolecules.json", // Optional if molecule info in another file
+    "library_molecule":"CH3Cl", // Molecule to grab from input file
+    "rotational_temperature": 0.0, //Temperature in Kelvin
+    "polarizability_components":[],
+    "rotational_constants":[],
+    "odd_J_degeneracy": 1.0, // used to include nuclear spin degeneracy, only for linear molecules
+    "even_J_degeneracy": 1.0
+  },
+  "Field":
+  {
+    // adiabatic inputs
+    "initial_intensity":1.0e9, // W/cm^2
+    "final_intensity":1.0e13,
+    "intensity_increment":1.33352127842,
+    "add_increment":false, // multiplies step if false
+    // nonadiabatic inputs
+    "pulses":
+    [
+      {
+        "pulse_max_intensity":, // W/cm^2
+        "pulse_fwhm":, // fs
+        "pulse_center":, //fs
+      }
+    ]
+  },
+  "Numerical":
+  {
+    "maximum_J":10, // estimate if no input given
+    "n_outputs":1000, // only needed for nonadiabatic calculations
+    "maximum_time": 10.0 // ps
+  },
+  "Outputs":
+  {
+    "basis_list": false, // outputs list of |JKM>
+    "coupling_matrix": false, // print portion of off diagonal elements
+    "eigenvectors": false, // only supported for adiabatic alignment, coefficients of |JKM>
+    "density":false, // only supported for adiabatic alignment, outputs real space density of wavefunction or density matrix
+    "cos2D":false, //projection of alignment, only supported for linear molecules
+    "cos3D":true,
+    "energy":true,
+    "intensity":true
+  }
+}

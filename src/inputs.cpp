@@ -1,12 +1,96 @@
-// #include "inputs.hpp"
+#include "inputs.hpp"
+#include <boost/filesystem.hpp>
+#include <algorithm>
 
-// using namespace std;
+inputParameters::inputParameters(std::string fn) : filename_(fn)
+{
+  stripComments_();
+  parseAllInputs_();
+}
+
+void inputParameters::stripComments_()
+{
+//  Open input and output file
+  if (!boost::filesystem::exists("output_data/"))
+    boost::filesystem::create_directory("output_data");
+
+  std::string newfn = "output_data/" + filename_;
+  std::fstream inputfile;
+  std::ofstream inputcopy;
+  inputfile.open(filename_);
+  inputcopy.open(newfn);
+
+//  search for '//', delete everything following, print remainder to new file
+  std::string line;
+  int found, found2;
+  while (getline(inputfile,line))
+  {
+    found  = line.find('/');
+    found2 = line.find('/', found+1);
+    if (found != line.npos && found2 == found+1)
+      inputcopy << line.erase(found, line.length()) << std::endl;
+    else
+      inputcopy << line << std::endl;
+  }
+  inputcopy.close();
+  inputfile.close();
+
+//  update filename;
+  filename_ = newfn;
+}
+
+
+void inputParameters::parseAllInputs_()
+{
+  boost::property_tree::ptree IP;
+  boost::property_tree::json_parser::read_json(filename_,IP);
+  parseJobType(IP);
+  parseMoleculeInfo(IP);
+  parseFieldInfo(IP);
+  parseNumericalParams(IP);
+  parseOutputsInfo(IP);
+}
+
+
+void inputParameters::parseJobType(boost::property_tree::ptree &IP)
+{
+  std::string job = IP.get<std::string>("Jobtype","none");
+  std::transform(job.begin(), job.end(), job.begin(), tolower);
+  if (job == "adiabatic")
+    jobtype_ = JOBTYPE::ADIABATIC;
+  else if (job == "nonadiabatic")
+    jobtype_ = JOBTYPE::NONADIABATIC;
+  else
+    throw std::runtime_error("Incorrect jobtype, only keywords 'nonadiabatic' and 'adiabatic' are supported");
+}
+
+void inputParameters::parseMoleculeInfo(boost::property_tree::ptree &IP)
+{
+
+}
+
+void inputParameters::parseFieldInfo(boost::property_tree::ptree &IP)
+{
+
+}
+
+void inputParameters::parseNumericalParams(boost::property_tree::ptree &IP)
+{
+
+}
+
+void inputParameters::parseOutputsInfo(boost::property_tree::ptree &IP)
+{
+
+}
+
+
 
 // inputParameters::inputParameters(std::string fn) : filename_(fn)
 // {
 //   stripComments_();
-//   boost::property_tree::ptree IP;
-//   boost::property_tree::json_parser::read_json(filename_,IP);
+  // boost::property_tree::ptree IP;
+  // boost::property_tree::json_parser::read_json(filename_,IP);
 //   minPower_ = IP.get<double>("Field.min_laser_power",1.0e6);
 //   maxPower_ = IP.get<double>("Field.max_laser_power",1.0e16);
 //   factor_   = IP.get<double>("Field.power_factor",10.0);
@@ -92,32 +176,4 @@
 //     catch (exception& e) {}
 
 //   }
-// }
-
-// void inputParameters::stripComments_()
-// {
-// //  Open input and output file
-//   string newfn = "output_data/" + filename_;
-//   fstream inputfile;
-//   ofstream inputcopy;
-//   inputfile.open(filename_);
-//   inputcopy.open(newfn);
-
-// //  search for '//', delete everything following, print remainder to new file
-//   string line;
-//   int found, found2;
-//   while (getline(inputfile,line))
-//   {
-//     found  = line.find('/');
-//     found2 = line.find('/', found+1);
-//     if (found != line.npos && found2 == found+1)
-//       inputcopy << line.erase(found, line.length()) << endl;
-//     else
-//       inputcopy << line << endl;
-//   }
-//   inputcopy.close();
-//   inputfile.close();
-
-// //  update filename;
-//   filename_ = newfn;
 // }

@@ -1,10 +1,7 @@
-#include <iostream>
 #include <fstream>
 #include <cmath>
-#include <algorithm>
 #include <stdexcept>
 #include <string>
-#include <vector>
 #include <limits>
 
 #include "matrix.hpp"

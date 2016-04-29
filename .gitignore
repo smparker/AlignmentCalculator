@@ -1,0 +1,6 @@
+autom4te*
+documentation
+*.o
+legacy
+*.deps*
+output_data

@@ -1,8 +1,6 @@
 /**
  * \file "matrix.hpp"
  * \author J. Szekely
- * \author S. Parker
- * \author B. Ashwell
  */
 
 #ifndef QLALIB_MATRIX

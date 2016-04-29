@@ -20,6 +20,7 @@
  *
  */
 enum class JOBTYPE {ADIABATIC,NONADIABATIC};
+
 /**
  * @brief Symmetry Class
  * @details Determines the symmetry influencing the basis and interaction elements of the Hamiltonian

@@ -35,16 +35,15 @@ class moleculeBase
   polarizability pol_;
   rotationalConstants rot_;
 
-  std::shared_ptr<basisSubset> createBasisSets(int JMAX);
-  std::shared_ptr<matrices> createFieldFreeHamiltonians(std::shared_ptr<basisSubset> sets);
-  std::shared_ptr<arrays> initializePopulations();
-  std::shared_ptr<matrices> initializeDensities(std::shared_ptr<arrays>);
-  std::shared_ptr<matrices> createInteractionHamiltonians(std::shared_ptr<basisSubset> sets);
+  moleculeBase();
+  moleculeBase(inputParameters &);
+  virtual std::shared_ptr<basisSubset> createBasisSets(int JMAX) = 0;
+  virtual std::shared_ptr<matrices> createFieldFreeHamiltonians(std::shared_ptr<basisSubset> sets) = 0;
+  virtual std::shared_ptr<arrays> initializePopulations() = 0;
+  virtual std::shared_ptr<matrices> initializeDensities(std::shared_ptr<arrays>) = 0;
+  virtual std::shared_ptr<matrices> createInteractionHamiltonians(std::shared_ptr<basisSubset> sets) = 0;
 
-  std::shared_ptr<arrays> populations_;
-
-  double calculatePartitionFxn();
-
+  virtual double calculatePartitionFxn() = 0;
 };
 
 

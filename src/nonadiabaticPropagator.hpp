@@ -24,6 +24,8 @@ class nonadiabaticPropagator
   std::vector<observable> observables_;
   std::vector<pulse> pulses_;
 
+  nonadiabaticPropagator();
+  nonadiabaticPropagator(inputParameters %IP);
   void setupOutputs();
   void initializeCVODE();
   void evalRHS();

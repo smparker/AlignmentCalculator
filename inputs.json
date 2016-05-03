@@ -3,11 +3,11 @@
   "Molecule":
   {
     "molecule_name":"N2", // For file management
-    "library_file":"SymTopMolecules.json", // Optional if molecule info in another file
-    "library_molecule":"CH3Cl", // Molecule to grab from input file
+    // "library_file":"SymTopMolecules.json", // Optional if molecule info in another file
+    // "library_molecule":"CH3Cl", // Molecule to grab from input file
     "rotational_temperature": 0.0, //Temperature in Kelvin
-    "polarizability_components":[],
-    "rotational_constants":[],
+    "polarizability_components":[10.0,0.0,0.0],
+    "rotational_constants":[1.0e-6,0.0,0.0],
     "odd_J_degeneracy": 1.0, // used to include nuclear spin degeneracy, only for linear molecules
     "even_J_degeneracy": 1.0
   },
@@ -22,15 +22,21 @@
     "pulses":
     [
       {
-        "pulse_max_intensity":0.0, // W/cm^2
-        "pulse_fwhm":0.0, // fs
-        "pulse_center":0.0 //fs
+        "pulse_max_intensity":1.0, // W/cm^2
+        "pulse_fwhm":2.0, // fs
+        "pulse_center":3.0 //fs
+      },
+      {
+        "pulse_max_intensity":10.0, // W/cm^2
+        "pulse_fwhm":20.0, // fs
+        "pulse_center":30.0 //fs
+
       }
     ]
   },
   "Numerical":
   {
-    "maximum_J":10, // estimate if no input given
+    "maximum_J":20, // estimate if no input given
     "n_outputs":1000, // only needed for nonadiabatic calculations
     "maximum_time": 10.0 // ps
   },

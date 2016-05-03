@@ -6,7 +6,9 @@
 #ifndef ALIGNMENTCALCULATOR_PULSES
 #define ALIGNMENTCALCULATOR_PULSES
 
-class pulse {
+class pulse
+{
+public:
 	double peakIntensity_;
 	double sigma_;
 	double t0_;

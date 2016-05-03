@@ -23,10 +23,10 @@ enum class JOBTYPE {ADIABATIC,NONADIABATIC};
 
 /**
  * @brief Symmetry Class
- * @details Determines the symmetry influencing the basis and interaction elements of the Hamiltonian
+ * @details Determines the symmetry influencing the basis and elements of the Hamiltonian
  *
  */
-enum class MOLSYM {LINEAR,SYMMETRIC,ASYMMETRIC};
+enum class MOLSYM {LINEAR,SYMMETRIC_OBLATE,SYMMETRIC_PROLATE,ASYMMETRIC};
 
 class inputParameters
 {
@@ -43,7 +43,7 @@ public:
   std::string library_molecule_; ///< Name of molecule in the library file
   double rotational_temp_; ///< Initial rotational temperature
   std::vector<double> rotational_constants_; ///< Array of one (linear) or three (asymmetric or symmetric) rotational constants
-  std::vector<double> polariabilities_; ///< Three polarizability elements
+  std::vector<double> polarizabilities_; ///< Three polarizability elements
   double odd_j_degeneracy_; ///< Term to modify thermal distribution for bosonic or fermionic nuclei
   double even_j_degeneracy_;///< Same as odd_j_degeneracy
   int max_j; ///< Maximum J state to include in calculation
@@ -102,5 +102,24 @@ public:
 ///@}
 
 };
+
+
+/**
+ * @brief boost json to vector
+ * @details helper function to convert boost json object into std::vector
+ *
+ * @param pt property tree
+ * @param key property tree key
+ *
+ * @return vector
+ */
+template <typename T>
+std::vector<T> as_vector(boost::property_tree::ptree const &pt, boost::property_tree::ptree::key_type const &key)
+{
+    std::vector<T> r;
+    for (auto& item : pt.get_child(key))
+        r.push_back(item.second.get_value<T>());
+    return r;
+}
 
 #endif

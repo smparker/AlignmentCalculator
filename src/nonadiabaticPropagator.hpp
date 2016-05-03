@@ -7,9 +7,13 @@
 
 #include "molecules.hpp"
 #include "matrix.hpp"
+#include "inputs.hpp"
+#include "outputs.hpp"
+#include <memory>
 
 class nonadiabaticPropagator
 {
+public:
   double partitionFxn_;
   double t0_;
   double tFinal_;
@@ -25,7 +29,8 @@ class nonadiabaticPropagator
   std::vector<pulse> pulses_;
 
   nonadiabaticPropagator();
-  nonadiabaticPropagator(inputParameters %IP);
+  nonadiabaticPropagator(inputParameters &IP);
+  void determineSymmetry();
   void setupOutputs();
   void initializeCVODE();
   void evalRHS();

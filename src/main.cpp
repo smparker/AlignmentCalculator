@@ -1,5 +1,5 @@
 #include <iostream>
-#include "inputs.hpp"
+#include "nonadiabaticPropagator.hpp"
 
 using namespace std;
 
@@ -11,8 +11,8 @@ int main(int argc, char const *argv[])
     cout << "Please provide the name of the json inputfile" << endl;
     return(1);
   }
-  inputParameters IP(argv[1]);
-
+  inputParameters inputs(argv[1]);
+  nonadiabaticPropagator calculation(inputs);
 
 
   return(0);

@@ -7,7 +7,7 @@ nonadiabaticPropagator::nonadiabaticPropagator()
 
 nonadiabaticPropagator::nonadiabaticPropagator(inputParameters &IP)
 {
-  molecule_ = make_shared<moleculeBase>(IP);
+  molecule_ = std::make_shared<moleculeBase>(IP);
 
 }
 

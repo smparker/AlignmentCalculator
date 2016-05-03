@@ -49,7 +49,10 @@
     "cos2D":false, //projection of alignment, only supported for linear molecules
     "cos3D":true,
     "energy":true,
-    "intensity":true
+    "intensity":true,
+    "expJ":false,
+    "expK":false,
+    "expM":false
   }
 }
 

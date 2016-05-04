@@ -7,7 +7,7 @@
     // "library_molecule":"CH3Cl", // Molecule to grab from input file
     "rotational_temperature": 0.0, //Temperature in Kelvin
     "polarizability_components":[10.0,0.0,0.0],
-    "rotational_constants":[1.0e-6,0.0,0.0],
+    "rotational_constants":[1.0e-6],
     "odd_J_degeneracy": 1.0, // used to include nuclear spin degeneracy, only for linear molecules
     "even_J_degeneracy": 1.0
   },

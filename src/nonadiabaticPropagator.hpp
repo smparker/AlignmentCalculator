@@ -9,7 +9,7 @@
 #include "matrix.hpp"
 #include "inputs.hpp"
 #include "outputs.hpp"
-#include <memory>
+ #include <memory>
 
 class nonadiabaticPropagator
 {
@@ -19,8 +19,9 @@ public:
   double tFinal_;
   double noutputs_;
   double temperature_;
+  MOLSYM symmetry_;
   std::shared_ptr<moleculeBase> molecule_;
-  std::shared_ptr<basisSubset> basisSets_;
+  std::shared_ptr<basisSubsets> basisSets_;
   std::shared_ptr<matrices> fieldFreeHamiltonians_;
   std::shared_ptr<matrices> intHamiltonians_;
   std::shared_ptr<matrices> densities_;
@@ -30,7 +31,7 @@ public:
 
   nonadiabaticPropagator();
   nonadiabaticPropagator(inputParameters &IP);
-  void determineSymmetry();
+  MOLSYM determineSymmetry(inputParameters &IP);
   void setupOutputs();
   void initializeCVODE();
   void evalRHS();

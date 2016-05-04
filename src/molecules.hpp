@@ -33,11 +33,12 @@ struct basis
 typedef std::vector<basis> basisSubset;
 typedef std::vector<std::shared_ptr<basisSubset>> basisSubsets;
 typedef std::vector<std::shared_ptr<matrixComp>> matrices;
-typedef std::vector<std::vector<double>*> arrays;
+typedef std::vector<std::shared_ptr<std::vector<double>>> arrays;
 
 class moleculeBase
 {
 public:
+  double even_j_degen_, odd_j_degen_;
   polarizability pol_;
   rotationalConstants rot_;
 

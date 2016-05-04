@@ -12,7 +12,6 @@ int main(int argc, char const *argv[])
     return(1);
   }
   inputParameters inputs(argv[1]);
-
   if (inputs.jobtype_ == JOBTYPE::NONADIABATIC)
     nonadiabaticPropagator calculation(inputs);
   // else if (inputs.jobtype_ == JOBTYPE::ADIABATIC)

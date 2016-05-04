@@ -7,3 +7,9 @@
  //      std::cout << a->at(ii).J << " " << a->at(ii).K << " " << a->at(ii).M << std::endl;
  //    std::cout << std::endl;
  //  }
+
+
+
+// Prints the field free Hamiltonians
+  // for (auto &iter : *fieldFreeHamiltonians_)
+  //   std::cout << *iter;

@@ -7,10 +7,10 @@ basis::basis(int j, int k, int m) : J(j), K(k), M(m) {}
   Molecule Base Class
 ***************************/
 
-moleculeBase::moleculeBase(inputParameters &IP)
-{
-
-}
+moleculeBase::moleculeBase(inputParameters &IP) :
+  even_j_degen_(IP.even_j_degeneracy_),
+  odd_j_degen_(IP.odd_j_degeneracy_)
+{}
 
 /**************************
   Linear Molecules
@@ -19,8 +19,9 @@ moleculeBase::moleculeBase(inputParameters &IP)
 linearMolecule::linearMolecule(inputParameters &IP) :
   moleculeBase(IP)
 {
-  createBasisSets(IP.max_j);
-  // Be_ = 
+  rot_.Be_  = IP.rotational_constants_[0];
+  pol_.aZZ_ = IP.polarizabilities_[0];
+  pol_.aXX_ = pol_.aYY_ = IP.polarizabilities_[1];
 }
 
 std::shared_ptr<basisSubsets> linearMolecule::createBasisSets(int JMAX)
@@ -59,7 +60,21 @@ std::shared_ptr<basisSubsets> linearMolecule::createBasisSets(int JMAX)
 }
 
 std::shared_ptr<matrices> linearMolecule::createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets)
-{}
+{
+  auto ffHams = std::make_shared<matrices>();
+  for (auto &set : *sets)
+  {
+    int N = set->size();
+    ffHams->push_back(std::make_shared<matrixComp>(N,N));
+    for (int ii = 0; ii < N; ii++)
+    {
+      int J = set->at(ii).J;
+      ffHams->back()->element(ii,ii) = rot_.Be_*J*(J+1);
+    }
+  }
+  return ffHams;
+}
+
 
 std::shared_ptr<arrays> linearMolecule::initializePopulations()
 {}
@@ -74,7 +89,7 @@ double linearMolecule::calculatePartitionFxn()
 {}
 
 #if 0
-hamiltnians_.clear();
+  hamiltonians_.clear();
   cosines_.clear();
   partitions_.clear();
   eigenvectorMatrices_.clear();
@@ -84,33 +99,9 @@ hamiltnians_.clear();
   //temp correction if 0 K
   if (temp_ == 0.0) temp_ = 1.0e-100;
 
-  // Construct the basis sets
-  map<int,shared_ptr<basisStates>> oddBasisSets;
-  map<int,shared_ptr<basisStates>> evenBasisSets;
-  for (int jj = 0; jj <= jStates_; jj++)
-  {
-    if (jj % 2 == 0)
-    {
-      for (int mm = -1*jj; mm <= jj; mm++)
-      {
-        if (evenBasisSets.find(mm) == evenBasisSets.end()) evenBasisSets[mm] = make_shared<basisStates>();
-        evenBasisSets[mm]->push_back({jj,0,mm});
-      }
-    }
-    else
-    {
-      for (int mm = -1*jj; mm <= jj; mm++)
-      {
-        if (oddBasisSets.find(mm) == oddBasisSets.end()) oddBasisSets[mm] = make_shared<basisStates>();
-        oddBasisSets[mm]->push_back({jj,0,mm});
-      }
-    }
-  }
-  // Append all sets to a single list
-  for (auto set : evenBasisSets)
-    basisSets_.push_back(set.second);
-  for (auto set : oddBasisSets)
-    basisSets_.push_back(set.second);
+
+  /// Make Basis Sets
+
 
   // Construct field free Hamiltonians (diagonal), cosine matrices and partition functions
   for (auto basisSet : basisSets_)

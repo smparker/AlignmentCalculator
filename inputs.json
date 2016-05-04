@@ -1,5 +1,5 @@
 {
-  "Jobtype":"adiabatic", // "adiabatic" or "nonadiabatic"
+  "Jobtype":"nonadiabatic", // "adiabatic" or "nonadiabatic"
   "Molecule":
   {
     "molecule_name":"N2", // For file management

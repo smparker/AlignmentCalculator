@@ -1,0 +1,167 @@
+{
+    "HCCCH3": {
+        "Mass": 73440.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 43.25116122,
+            "YY": 16.77478149,
+            "ZZ": 16.77326378
+        },
+        "RotationalConstants":{
+            "Ae":2.43655585e-05,
+            "Be":1.28356764e-06,
+            "Ce":1.28356764e-06
+        }
+    },
+    "CHCl3": {
+        "Mass": 216648.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 42.73520797,
+            "YY": 42.73520797,
+            "ZZ": 20.41887925
+        },
+        "RotationalConstants":{
+            "Ce":2.49626890e-07,
+            "Be":4.81450790e-07,
+            "Ae":4.81450790e-07
+        }
+    },
+    "CH3Cl": {
+        "Mass": 91800.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "ZZ": 28.73855569,
+            "YY": 13.85783154,
+            "XX": 13.85788658
+        },
+        "RotationalConstants":{
+            "Ae":2.37844759e-05,
+            "Be":2.37844759e-05,
+            "Ce":1.96515965e-06
+        }
+    },
+    "HCCCCl3": {
+        "Mass": 260712.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 65.37282978,
+            "YY": 52.12184222,
+            "ZZ": 52.09178890
+        },
+        "RotationalConstants":{
+            "Ae":2.36291695e-07,
+            "Be":2.32605387e-07,
+            "Ce":2.32605387e-07
+        }
+    },
+    "HCCCI3": {
+        "Mass": 767448.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 113.88038334,
+            "YY": 113.88038334,
+            "ZZ": 109.13729698
+        },
+        "RotationalConstants":{
+            "Ce":4.52391293e-08,
+            "Be":7.26588662e-08,
+            "Ae":7.26588662e-08
+        }
+    },
+    "CHI3": {
+        "Mass": 723384.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 108.89249182,
+            "YY": 108.89249182,
+            "ZZ": 55.94625878
+        },
+        "RotationalConstants":{
+            "Ae":8.82652300e-08,
+            "Be":8.82652300e-08,
+            "Ce":4.48104955e-08
+        }
+    },
+    "CH3F": {
+        "Mass": 73440.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 12.6038339,
+            "YY": 12.6038339,
+            "ZZ": 11.9428794
+        },
+        "RotationalConstants":{
+            "Ae":2.42915E-05,
+            "Be":4.00274E-06,
+            "Ce":4.00274E-06
+        }
+    },
+    "benzene": {
+        "Mass": 0.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 68.6539,
+            "YY": 68.654,
+            "ZZ": 21.2419
+        },
+        "RotationalConstants":{
+            "Ae":8.78224E-07,
+            "Be":8.78224E-07,
+            "Ce":4.39112E-07
+        }
+    },
+    "CH3CN": {
+        "Mass": 0.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 17.1780646,
+            "YY": 17.1780757,
+            "ZZ": 32.1159235
+        },
+        "RotationalConstants":{
+            "Ae":2.44952E-05,
+            "Be":1.41474E-06,
+            "Ce":1.41474E-06
+        }
+    },
+    "CH3Br": {
+        "Mass": 0.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 15.5131351,
+            "YY": 15.5131293,
+            "ZZ": 38.1711481
+        },
+        "RotationalConstants":{
+            "Ae":1.40279E-06,
+            "Be":1.40279E-06,
+            "Ce":2.42848E-05
+        }
+    },
+    "CH3I": {
+        "Mass": 0.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX":20.2598806,
+            "YY":20.2598872,
+            "ZZ":50.1106538
+        },
+        "RotationalConstants":{
+            "Ae":1.11065E-06,
+            "Be":1.11065E-06,
+            "Ce":2.43287E-05
+        }
+    }
+}

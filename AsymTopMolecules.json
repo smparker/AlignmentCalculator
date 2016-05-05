@@ -1,0 +1,166 @@
+{
+    "iodobenzene": {
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 145.089,
+            "YY": 103.249,
+            "ZZ": 68.833
+        },
+        "RotationalConstants":{
+            "Ae":8.62031e-07,
+            "Be":1.14050e-07,
+            "Ce":1.00708e-07
+        }
+    },
+    "bromobenzene": {
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX":105.3496426,
+            "YY":73.2445792,
+            "ZZ":28.8100059
+        },
+        "RotationalConstants":{
+            "Ae":8.77276E-07,
+            "Be":1.4813E-07,
+            "Ce":1.26732E-07
+        }
+    },
+    "chlorobenzene": {
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX":95.3961334,
+            "YY":70.7873216,
+            "ZZ":26.2199198
+        },
+        "RotationalConstants":{
+            "Ae":8.74652E-07,
+            "Be":2.34363E-07,
+            "Ce":1.84837E-07
+        }
+    },
+    "fluorobenzene": {
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 69.1499261,
+            "YY": 68.0901903,
+            "ZZ": 25.0679333
+        },
+        "RotationalConstants":{
+            "Ae":8.73517E-07,
+            "Be":3.90822E-07,
+            "Ce":2.70013E-07
+        }
+    },
+    "HCCCI3": {
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 113.88038334,
+            "YY": 113.88038334,
+            "ZZ": 109.13729698
+        },
+        "RotationalConstants":{
+            "Ae":7.26588662e-08,
+            "Be":7.26588662e-08,
+            "Ce":4.52391293e-08
+        }
+    },
+    "CHCl3":
+    {
+        "Mass": 216648.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 42.73520797,
+            "YY": 42.73520797,
+            "ZZ": 20.41887925
+        },
+        "RotationalConstants":{
+            "Ae":4.81450790e-07,
+            "Be":4.81450790e-07,
+            "Ce":2.49626890e-07
+        }
+    },
+    "CHI3":
+    {
+        "Mass": 723384.0, //atomic units
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability":
+        {
+            "XX": 108.89249182,
+            "YY": 108.89249182,
+            "ZZ": 55.94625878
+        },
+        "RotationalConstants":
+        {
+            "Ae":8.82652300e-08,
+            "Be":8.82652300e-08,
+            "Ce":4.48104955e-08
+        }
+    },
+    "CH3Cl": {
+        "Mass": 91800.0,
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 13.85788658,
+            "YY": 13.85783154,
+            "ZZ": 28.73855569
+        },
+        "RotationalConstants":{
+            "Ae":2.37844759e-05,
+            "Be":2.37844759e-05,
+            "Ce":1.96515965e-06
+        }
+    },
+    "HCCCCl3": {
+        "Mass": 260712.0, //atomic units
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 65.37282978,
+            "YY": 52.12184222,
+            "ZZ": 52.09178890
+        },
+        "RotationalConstants":{
+            "Ae":2.36291695e-07,
+            "Be":2.32605387e-07,
+            "Ce":2.32605387e-07
+        }
+    },
+    "ethene": {
+        "Mass": 0.0, //atomic units
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX": 19.8447057,
+            "YY": 32.1337174,
+            "ZZ": 8.7192855
+        },
+        "RotationalConstants":{
+            "Ae":3.87529E-06,
+            "Be":4.67171E-06,
+            "Ce":2.27321E-05
+        }
+    },
+    "cyclohexadiene": {
+        "Mass": 0.0, //atomic units
+        "Charge": 0,
+        "Multiplicity": 1,
+        "Polarizability": {
+            "XX":54.4138,
+            "YY":79.2645,
+            "ZZ":33.4246
+        },
+        "RotationalConstants":{
+            "Ae":7.87494E-07,
+            "Be":7.5352E-07,
+            "Ce":3.971E-07
+        }
+    }
+}

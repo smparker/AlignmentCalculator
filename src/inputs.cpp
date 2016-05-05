@@ -1,6 +1,7 @@
 #include "inputs.hpp"
 #include <boost/filesystem.hpp>
 #include <algorithm>
+#include <cmath>
 #include "constants.hpp"
 
 inputParameters::inputParameters(std::string fn) : filename_(fn)
@@ -11,7 +12,7 @@ inputParameters::inputParameters(std::string fn) : filename_(fn)
   }
   catch(...)
   {
-    throw std::runtime_error("Make sure directory \"output_data\" exists in workign directory. This is an probably from an error in the boost library that will be fixed in the future.");
+    throw std::runtime_error("Make sure directory \"output_data\" exists in working directory. This is an probably from an error in the boost library that will be fixed in the future.");
   }
   parseAllInputs_();
 }
@@ -105,14 +106,35 @@ void inputParameters::parseMoleculeInfo(boost::property_tree::ptree &IP)
     boost::property_tree::json_parser::read_json(library_file_,molIP);
 
     // Get polarization in either list format or listing "axx, ayy, azz"
-    polarizabilities_ = as_vector<double>(molIP,library_molecule_+".polarizability_components");
-    if (polarizabilities_.size() == 0)
-      polarizabilities_ = {
+    try
+    {
+      polarizabilities_ = as_vector<double>(molIP,library_molecule_+".polarizability_components");
+    }
+    catch(...)
+    {
+      if (polarizabilities_.size() == 0)
+        polarizabilities_ = {
+          molIP.get<double>(library_molecule_ + ".Polarizability.XX",-1.0),
+          molIP.get<double>(library_molecule_ + ".Polarizability.YY",-1.0),
+          molIP.get<double>(library_molecule_ + ".Polarizability.ZZ",-1.0) };
+      if ((polarizabilities_[0] == -1.0) || (polarizabilities_[1] == -1.0) || (polarizabilities_[2] == -1.0))
+        throw std::runtime_error("Error: Cannot import polarizability components from requested molecule library file");
+    }
+    // Get rotational constants in either list format or listing "axx, ayy, azz"
+    try
+    {
+      rotational_constants_ = as_vector<double>(molIP,library_molecule_+".rotational_constants");
+    }
+    catch(...)
+    {
+    if (rotational_constants_.size() == 0)
+      rotational_constants_ = {
         molIP.get<double>(library_molecule_ + ".RotationalConstants.Ae",-1.0),
         molIP.get<double>(library_molecule_ + ".RotationalConstants.Be",-1.0),
         molIP.get<double>(library_molecule_ + ".RotationalConstants.Ce",-1.0) };
-    if ((polarizabilities_[0] == -1.0) || (polarizabilities_[1] == -1.0) || (polarizabilities_[2] == -1.0))
-      throw std::runtime_error("Error: Cannot import polarizability components from requested molecule library file");
+    if ((rotational_constants_[0] == -1.0) || (rotational_constants_[1] == -1.0) || (rotational_constants_[2] == -1.0))
+      throw std::runtime_error("Error: Cannot import rotational constants from requested molecule library file");
+    }
   }
 // Get initial temperature of the rotational ensemble
   rotational_temp_ = IP.get<double>("Molecule.rotational_temperature",-1.0);
@@ -141,7 +163,7 @@ void inputParameters::parseFieldInfo(boost::property_tree::ptree &IP)
   }
   else if (jobtype_ == JOBTYPE::NONADIABATIC)
   {
-    constexpr double FWHMFactor = 2.0*sqrt(2.0*log(2.0));
+    double FWHMFactor = 2.0*sqrt(2.0*log(2.0));
     for (auto &p : IP.get_child("Field.pulses"))
     {
       double sig = p.second.get<double>("pulse_fwhm",100.0)*CONSTANTS::AUperFS/ FWHMFactor;

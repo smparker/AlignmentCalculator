@@ -1,0 +1,214 @@
+{
+	 "H2+":
+  {
+		"Mass1": 1.0,
+		"Mass2": 1.0,
+		"Charge": 1.0,
+		"Multiplicity": 2,
+		"Polarizability": {
+			"XX": 0.56550024,
+			"YY": 0.56550024,
+			"ZZ": 6.71245818
+		},
+		"AsympCoeffs":[4.37,0.00,0.05,0.00,0.00],
+		"IonizationEnergy":29.99,
+    "Zion": 2.0,
+    "IonEn": 29.99,
+    "l": 0,
+    "m": 0,
+    "AsympCoeffs":[4.37,0.00,0.05]
+  },
+	"H2": {
+		"Mass1": 1.0,
+		"Mass2": 1.0,
+		"Charge": 0,
+		"Multiplicity": 1,
+		"BondLength": 0.743947,
+		"Polarizability": {
+			"XX": 0.56550024,
+			"YY": 0.56550024,
+			"ZZ": 6.71245818
+		},
+    "l": 0,
+    "m": 0,
+		"rotational_constants" : [0.0002778675799086758],
+		"AsympCoeffs":[4.37,0.00,0.05,0.00,0.00],
+		"IonizationEnergy":29.99,
+    "Zion": 1.0
+	},
+	"D2": {
+		"Mass1": 2.0,
+		"Mass2": 2.0,
+		"Charge": 0.0,
+		"Multiplicity": 1,
+		"BondLength": 0.743947,
+		"Polarizability": {
+			"XX": 0.56550024,
+			"YY": 0.56550024,
+			"ZZ": 6.71245818
+		},
+		"rotational_constants":[0.00013899543378995434],
+		"AsympCoeffs":[2.51,0.00,0.06,0.00],
+		"IonizationEnergy":15.47,
+    "l": 0,
+    "m": 0,
+    "Zion": 1.0
+	},
+	"HF": {
+		"Mass1": 1.0,
+		"Mass2": 19.0,
+		"Charge": 0,
+		"Multiplicity": 1,
+		"BondLength": 0.922239,
+		"Polarizability": {
+			"XX": 0.65999055,
+			"YY": 0.65999055,
+			"ZZ": 3.93241788
+		},
+		"rotational_constants":[9.567899543378996e-05]
+	},
+	"HCl": {
+		"Mass1": 1.0,
+		"Mass2": 35.0,
+		"Charge": 0,
+		"Multiplicity": 1,
+		"BondLength": 1.287546,
+		"Polarizability": {
+			"XX": 3.33899082,
+			"YY": 3.33899082,
+			"ZZ": 13.41544921
+		},
+		"rotational_constants":[4.837123287671233e-05]
+	},
+	"HBr": {
+		"Mass1": 1.0,
+		"Mass2": 80.0,
+		"Charge": 0,
+		"Multiplicity": 1,
+		"BondLength": 1.423896,
+		"Polarizability": {
+			"XX" : 6.44403404,
+			"YY" : 6.44403404,
+			"ZZ" : 17.6428976
+		},
+		"rotational_constants":[3.864840182648402e-05]
+	},
+	"OH": {
+		"Mass1": 1.0,
+		"Mass2": 16.0,
+		"Charge": -1,
+		"Multiplicity": 1,
+		"BondLength": 0.966104,
+		"Polarizability": {
+			"XX": 1.47264701,
+			"YY": 1.47264701,
+			"ZZ": 9.36468046
+		}
+	},
+	"CO": {
+		"Mass1": 12.0,
+		"Mass2": 16.0,
+		"Charge": 0,
+		"Multiplicity": 1,
+		"BondLength": 1.127764,
+		"Polarizability": {
+			"XX" : 7.06531958,
+			"YY" : 7.06531958,
+			"ZZ" : 12.49002644
+		},
+		"rotational_constants":[8.817351598173516e-06]
+	},
+	"O2": {
+		"Mass1": 16.0,
+		"Mass2": 16.0,
+		"Charge": 0,
+		"Multiplicity": 3,
+		"BondLength": 1.205805,
+		"Polarizability": {
+			"XX" : 2.55957462,
+			"YY" : 2.55957462,
+			"ZZ" : 15.33670639
+		},
+		"rotational_constants":[6.598173515981735e-06]
+	},
+	"F2": {
+		"Mass1": 19.0,
+		"Mass2": 19.0,
+		"Charge": 0,
+		"Multiplicity": 1,
+		"BondLength": 1.407805,
+		"Polarizability": {
+			"XX" : 0.79278148,
+			"YY" : 0.79278148,
+			"ZZ" : 12.41070764
+		},
+		"rotational_constants":[4.060703196347032e-06]
+	},
+	"N2": {
+		"Mass1": 14.0,
+		"Mass2": 14.0,
+		"Charge": 0,
+		"Multiplicity": 1,
+		"BondLength": 1.095614,
+		"Polarizability": {
+			"XX" : 4.87128440,
+			"YY" : 4.87128440,
+			"ZZ" : 14.15176930
+		},
+		"rotational_constants":[9.12420091324201e-06],
+		"AsympCoeffs":[2.02,0.00,0.78,0.00,0.04],
+		"IonizationEnergy":15.58,
+    "Zion": 1.0
+	},
+	"CN": {
+		"Mass1": 12.0,
+		"Mass2": 16.0,
+		"Charge": -1,
+		"Multiplicity": 1,
+		"BondLength": 1.175191,
+		"Polarizability": {
+			"XX" : 8.26025154,
+			"YY" : 8.26025154,
+			"ZZ" : 20.39970978
+		}
+	},
+		"Cl2": {
+		"Mass1": 35.0,
+		"Mass2": 35.0,
+		"Charge": 0,
+		"Multiplicity": 1,
+		"BondLength":  2.053192,
+		"Polarizability": {
+			"XX" : 5.42029333,
+			"YY" : 5.42029333,
+			"ZZ" : 41.58342972
+		},
+		"rotational_constants":[1.1148401826484018e-06]
+	},
+	"I2": {
+		"Mass1": 127.0,
+		"Mass2": 127.0,
+		"Charge": 0,
+		"Multiplicity": 1,
+		"BondLength" : 2.736062,
+		"Polarizability": {
+			"XX" : 31.64532124,
+			"YY" : 31.64532124,
+			"ZZ" : 91.34004601
+		},
+		"rotational_constants":[1.706392694063927e-07]
+	},
+	"HCCH": {
+		"Mass1": 127.0,
+		"Mass2": 127.0,
+		"Charge": 0,
+		"Multiplicity": 1,
+		"BondLength" : 2.736062,
+		"Polarizability": {
+			"XX" : 0.00,
+			"YY" : 0.00,
+			"ZZ" : 12.62
+		},
+		"rotational_constants" : [5.36167556868e-06]
+	}
+}

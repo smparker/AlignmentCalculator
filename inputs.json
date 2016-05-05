@@ -38,7 +38,9 @@
   {
     "maximum_J":40, // estimate if no input given
     "n_outputs":1000, // only needed for nonadiabatic calculations
-    "maximum_time": 10.0 // ps
+    "maximum_time": 10.0, // ps
+    "atol":1.0e-8, // DiffEq Absolute Tolerance
+    "rtol":1.0e-6 // DiffEq Relative Tolerance
   },
   "Outputs":
   {

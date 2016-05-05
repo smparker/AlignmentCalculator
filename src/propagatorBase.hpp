@@ -5,11 +5,7 @@
 #ifndef ALIGNMENTCALCULATOR_PROPAGATORBASE
 #define ALIGNMENTCALCULATOR_PROPAGATORBASE
 
-#include "molecules.hpp"
-#include "matrix.hpp"
-#include "inputs.hpp"
 #include "outputs.hpp"
- #include <memory>
 
 class propagatorBase
 {

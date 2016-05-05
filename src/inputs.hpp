@@ -101,6 +101,8 @@ public:
   std::vector<pulse> pulses_; ///< List of laser pulses, all assumed to have same polarization
   int n_outputs_; ///< Total number of data points to collect
   double max_time_; ///< Time of nonadiabatic simulation
+  double atol_; ///< CVODE Absolute tolerance
+  double rtol_; ///< CVODE Relative tolerance
 
 ///@}
 

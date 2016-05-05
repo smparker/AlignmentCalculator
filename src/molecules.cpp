@@ -128,8 +128,18 @@ std::shared_ptr<arrays> linearMolecule::initializePopulations(std::shared_ptr<ba
   return pops;
 }
 
-std::shared_ptr<matrices> linearMolecule::initializeDensities(std::shared_ptr<arrays>)
-{}
+std::shared_ptr<matrices> linearMolecule::initializeDensities(std::shared_ptr<arrays> pops)
+{
+  auto DMs = std::make_shared<matrices>();
+  for (auto &p : *pops)
+  {
+    int N = p->size();
+    DMs->push_back(std::make_shared<matrixComp>(N,N));
+    for (int ii = 0; ii < N; ii++)
+      DMs->back()->element(ii,ii) = p->at(ii);
+  }
+  return DMs;
+}
 
 
 #if 0

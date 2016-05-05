@@ -39,6 +39,7 @@ class moleculeBase
 {
 public:
   double even_j_degen_, odd_j_degen_;
+  double partition_function_;
   polarizability pol_;
   rotationalConstants rot_;
 
@@ -46,11 +47,10 @@ public:
   moleculeBase(inputParameters &);
   virtual std::shared_ptr<basisSubsets> createBasisSets(int JMAX) = 0;
   virtual std::shared_ptr<matrices> createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets) = 0;
-  virtual std::shared_ptr<arrays> initializePopulations() = 0;
+  virtual std::shared_ptr<arrays> initializePopulations(std::shared_ptr<basisSubsets>,std::shared_ptr<matrices>,double) = 0;
   virtual std::shared_ptr<matrices> initializeDensities(std::shared_ptr<arrays>) = 0;
   virtual std::shared_ptr<matrices> createInteractionHamiltonians(std::shared_ptr<basisSubsets> sets) = 0;
 
-  virtual double calculatePartitionFxn() = 0;
 };
 
 
@@ -60,10 +60,9 @@ public:
   linearMolecule(inputParameters &IP);
   std::shared_ptr<basisSubsets> createBasisSets(int JMAX);
   std::shared_ptr<matrices> createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets);
-  std::shared_ptr<arrays> initializePopulations();
+  std::shared_ptr<arrays> initializePopulations(std::shared_ptr<basisSubsets>,std::shared_ptr<matrices>,double);
   std::shared_ptr<matrices> initializeDensities(std::shared_ptr<arrays>);
   std::shared_ptr<matrices> createInteractionHamiltonians(std::shared_ptr<basisSubsets> sets);
-  double calculatePartitionFxn();
 };
 
 class symmetricTopMolecule : public moleculeBase
@@ -72,10 +71,9 @@ public:
   symmetricTopMolecule(inputParameters &IP);
   std::shared_ptr<basisSubsets> createBasisSets(int JMAX);
   std::shared_ptr<matrices> createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets);
-  std::shared_ptr<arrays> initializePopulations();
+  std::shared_ptr<arrays> initializePopulations(std::shared_ptr<basisSubsets>,std::shared_ptr<matrices>,double);
   std::shared_ptr<matrices> initializeDensities(std::shared_ptr<arrays>);
   std::shared_ptr<matrices> createInteractionHamiltonians(std::shared_ptr<basisSubsets> sets);
-  double calculatePartitionFxn();
 };
 
 class asymmetricTopMolecule : public moleculeBase
@@ -85,11 +83,12 @@ public:
   asymmetricTopMolecule(inputParameters &IP);
   std::shared_ptr<basisSubsets> createBasisSets(int JMAX);
   std::shared_ptr<matrices> createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets);
-  std::shared_ptr<arrays> initializePopulations();
+  std::shared_ptr<arrays> initializePopulations(std::shared_ptr<basisSubsets>,std::shared_ptr<matrices>,double);
   std::shared_ptr<matrices> initializeDensities(std::shared_ptr<arrays>);
   std::shared_ptr<matrices> createInteractionHamiltonians(std::shared_ptr<basisSubsets> sets);
-  double calculatePartitionFxn();
 };
+
+double FMIME (int J, int K, int M, int Q, int S, int j, int k, int m);
 
 
 #endif

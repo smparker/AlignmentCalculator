@@ -20,6 +20,7 @@ namespace CONSTANTS {
 	const double ELECFIELD  = 5.14e9; // V/cm^2
 	const double LASERINTEN = 3.51e16; // W/cm^2 (0.5*vacuum_permitivity*speed_of_light*EField^2)
 	const double C          = 2.998e10/VEL; //speed of light
+	const double BOLTZ      = 3.1669e-6; // Boltzmann constant in atomic units
 }
 
 #endif

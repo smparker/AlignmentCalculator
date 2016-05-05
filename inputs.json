@@ -5,7 +5,7 @@
     "molecule_name":"N2", // For file management
     // "library_file":"SymTopMolecules.json", // Optional if molecule info in another file
     // "library_molecule":"CH3Cl", // Molecule to grab from input file
-    "rotational_temperature": 0.0, //Temperature in Kelvin
+    "rotational_temperature": 1.0, //Temperature in Kelvin
     "polarizability_components":[10.0,0.0,0.0],
     "rotational_constants":[1.0e-6],
     "odd_J_degeneracy": 1.0, // used to include nuclear spin degeneracy, only for linear molecules

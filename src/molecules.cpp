@@ -1,5 +1,7 @@
 #include "molecules.hpp"
+#include "constants.hpp"
 #include <map>
+#include <gsl/gsl_sf_coupling.h> // Wigner 3-j symbols
 
 basis::basis(int j, int k, int m) : J(j), K(k), M(m) {}
 
@@ -26,29 +28,30 @@ linearMolecule::linearMolecule(inputParameters &IP) :
 
 std::shared_ptr<basisSubsets> linearMolecule::createBasisSets(int JMAX)
 {
+  // Makes basis sets assuming M is conserved and J couples only to other J of the same parity
   auto basis_set = std::make_shared<basisSubsets>();
   std::map<int,std::shared_ptr<basisSubset>> oddBasisSets, evenBasisSets;
-  for (int jj = 0; jj <= JMAX; jj++)
+  // Even J symmetry sets
+  for (int jj = 0; jj <= JMAX; jj+=2)
   {
-    if (jj % 2 == 0)
+    for (int mm = -1*jj; mm <= jj; mm++)
     {
-      for (int mm = -1*jj; mm <= jj; mm++)
-      {
-        if (evenBasisSets.find(mm) == evenBasisSets.end())
-          evenBasisSets[mm] = std::make_shared<basisSubset>();
-        evenBasisSets[mm]->push_back( basis(jj,0,mm) );
-      }
-    }
-    else
-    {
-      for (int mm = -1*jj; mm <= jj; mm++)
-      {
-        if (oddBasisSets.find(mm) == oddBasisSets.end())
-          oddBasisSets[mm] = std::make_shared<basisSubset>();
-        oddBasisSets[mm]->push_back( basis(jj,0,mm) );
-      }
+      if (evenBasisSets.find(mm) == evenBasisSets.end())
+        evenBasisSets[mm] = std::make_shared<basisSubset>();
+      evenBasisSets[mm]->push_back( basis(jj,0,mm) );
     }
   }
+  // Odd J symmetry sets
+  for (int jj = 1; jj <= JMAX; jj+=2)
+  {
+    for (int mm = -1*jj; mm <= jj; mm++)
+    {
+      if (evenBasisSets.find(mm) == evenBasisSets.end())
+        evenBasisSets[mm] = std::make_shared<basisSubset>();
+      evenBasisSets[mm]->push_back( basis(jj,0,mm) );
+    }
+  }
+
   // Append all sets to a single list
   for (auto set : evenBasisSets)
     basis_set->push_back(set.second);
@@ -75,18 +78,59 @@ std::shared_ptr<matrices> linearMolecule::createFieldFreeHamiltonians(std::share
   return ffHams;
 }
 
+std::shared_ptr<matrices> linearMolecule::createInteractionHamiltonians(std::shared_ptr<basisSubsets> sets)
+{
+  auto intHams = std::make_shared<matrices>();
+  double coeff = (-1.0/4.0)*abs(pol_.aZZ_ - pol_.aXX_);
+  for (auto &set : *sets)
+  {
+    int N = set->size();
+    intHams->push_back(std::make_shared<matrixComp>(N,N));
+    for (int ii = 0; ii < N; ii++)
+    {
+      for (int jj = 0; jj < N; jj++)
+      {
+        double coupling = FMIME( set->at(ii).J, set->at(ii).K, set->at(ii).M,0,0,set->at(jj).J, set->at(jj).K ,set->at(jj).M);
+          intHams->back()->element(ii,jj) += (2.0/3.0)*coeff*coupling;
+      }
+    }
+  }
+  return intHams;
+}
 
-std::shared_ptr<arrays> linearMolecule::initializePopulations()
-{}
+std::shared_ptr<arrays> linearMolecule::initializePopulations(std::shared_ptr<basisSubsets> sets, std::shared_ptr<matrices> ffHam, double temperature)
+{
+  double temp;
+  temperature == 0.0 ? temp = 1.0e-30 : temp = temperature; ///< Avoids divide by zero error
+  auto pops = std::make_shared<arrays>();
+  partition_function_ = 0.0;
+  for (int ii = 0; ii < sets->size(); ii++)
+  {
+    auto basisSet = sets->at(ii);
+    auto Hamiltonian = ffHam->at(ii);
+    int N = basisSet->size();
+
+    pops->push_back(std::make_shared<std::vector<double>>(N,0.0));
+
+    for (int jj = 0; jj < N; jj++)
+    {
+      double popTemp = exp(-1.0*Hamiltonian->element(jj,jj).real()/(temp*CONSTANTS::BOLTZ));
+      (basisSet->at(jj).J % 2 == 0) ? popTemp *= even_j_degen_ : popTemp *= odd_j_degen_;
+      pops->back()->at(jj) = popTemp;
+      partition_function_ += popTemp;
+    }
+  }
+  // Scale everything by the partition function
+  for (auto &p : *pops)
+  {
+    std::transform(p->begin(), p->end(), p->begin(), [&](double a){return a/partition_function_;});
+  }
+  return pops;
+}
 
 std::shared_ptr<matrices> linearMolecule::initializeDensities(std::shared_ptr<arrays>)
 {}
 
-std::shared_ptr<matrices> linearMolecule::createInteractionHamiltonians(std::shared_ptr<basisSubsets> sets)
-{}
-
-double linearMolecule::calculatePartitionFxn()
-{}
 
 #if 0
   hamiltonians_.clear();
@@ -172,16 +216,13 @@ std::shared_ptr<basisSubsets> symmetricTopMolecule::createBasisSets(int JMAX)
 std::shared_ptr<matrices> symmetricTopMolecule::createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets)
 {}
 
-std::shared_ptr<arrays> symmetricTopMolecule::initializePopulations()
+std::shared_ptr<arrays> symmetricTopMolecule::initializePopulations(std::shared_ptr<basisSubsets> sets, std::shared_ptr<matrices> ffHam, double temperature)
 {}
 
 std::shared_ptr<matrices> symmetricTopMolecule::initializeDensities(std::shared_ptr<arrays>)
 {}
 
 std::shared_ptr<matrices> symmetricTopMolecule::createInteractionHamiltonians(std::shared_ptr<basisSubsets> sets)
-{}
-
-double symmetricTopMolecule::calculatePartitionFxn()
 {}
 
 
@@ -205,7 +246,7 @@ std::shared_ptr<matrices> asymmetricTopMolecule::createFieldFreeHamiltonians(std
 
 }
 
-std::shared_ptr<arrays> asymmetricTopMolecule::initializePopulations()
+std::shared_ptr<arrays> asymmetricTopMolecule::initializePopulations(std::shared_ptr<basisSubsets> sets, std::shared_ptr<matrices> ffHam, double temperature)
 {
 
 }
@@ -220,12 +261,28 @@ std::shared_ptr<matrices> asymmetricTopMolecule::createInteractionHamiltonians(s
 
 }
 
-double asymmetricTopMolecule::calculatePartitionFxn()
+/**************************
+  Molecule helper functions
+***************************/
+
+/**
+ * @brief Field Matter Interaction Matrix Element
+ * @details Calculates the coupling between two |JKM> states in an off resonance field
+ *
+ * @param J J of State 1
+ * @param K K of State 1
+ * @param M M of State 1
+ * @param Q Interaction Quantum Number
+ * @param S Other Interaction Quantum Number
+ * @param j J of State 2
+ * @param k K of State 2
+ * @param m M of State 2
+ * @return Coupling Matrix Element
+ */
+double FMIME (int J, int K, int M, int Q, int S, int j, int k, int m)
 {
-
+  double coeff = pow(-1.0,k+m)*sqrt((2.0*J + 1.0)*(2.0*j+1.0));
+  double J1    = gsl_sf_coupling_3j(2*J, 4, 2*j, 2*M, 2*Q, -2*m);
+  double J2    = gsl_sf_coupling_3j(2*J, 4, 2*j, 2*K, 2*S, -2*k);
+  return coeff*J2*J1;
 }
-
-
-
-
-

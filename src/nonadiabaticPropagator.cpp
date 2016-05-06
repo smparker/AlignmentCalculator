@@ -1,4 +1,5 @@
 #include "nonadiabaticPropagator.hpp"
+#include "utilities.hpp"
 
 #define Ith(v,i)    NV_Ith_S(v,i-1)       /* Ith numbers components 1..NEQ */
 
@@ -9,12 +10,14 @@ nonadiabaticPropagator::nonadiabaticPropagator(inputParameters &IP) :
   time_(t0_),
   tFinal_(IP.max_time_),
   noutputs_(IP.n_outputs_),
-  dt_((tFinal_ - t0_) / noutputs_),
   pulses_(IP.pulses_),
   atol_(IP.atol_),
   rtol_(IP.rtol_)
 {
+  dt_ = (tFinal_ - t0_) / noutputs_;
   initializeCVODE();
+  for (int ii = 0; ii < 1000; ii++)
+    step();
 }
 
 void nonadiabaticPropagator::initializeCVODE()
@@ -45,8 +48,21 @@ void nonadiabaticPropagator::run()
 
 int nonadiabaticPropagator::evalRHS(realtype t, N_Vector y, N_Vector ydot, void *user_data)
 {
-
-
+  nonadiabaticPropagator* obj = (nonadiabaticPropagator*)(user_data);
+  int ii = obj->index_flag_;
+  int N  = obj->basisSets_->at(ii)->size();
+  double efield = 0.0;
+  for (auto &p : obj->pulses_)
+    efield += p.evaluate(t);
+  std::shared_ptr<matrixComp> totalH;
+  if (efield > 1.0e-10)
+    totalH = std::make_shared<matrixComp>(*(obj->fieldFreeHamiltonians_->at(ii)) + *(obj->intHamiltonians_->at(ii))*efield);
+  else
+    totalH = obj->fieldFreeHamiltonians_->at(ii);
+  zgemm3m_("N", "N", N, N, N, cplx(0.0,-1.0), totalH->data(),                                        N, reinterpret_cast<const cplx *>(N_VGetArrayPointer(y)), N, cplx(0.0), reinterpret_cast<cplx *>(N_VGetArrayPointer(ydot)), N);
+  zgemm3m_("N", "N", N, N, N, cplx(0.0,1.0),  reinterpret_cast<const cplx *>(N_VGetArrayPointer(y)), N, totalH->data(),                                        N, cplx(1.0), reinterpret_cast<cplx *>(N_VGetArrayPointer(ydot)), N);
+  // if dissipation needed, add terms here
+  return(0);
 }
 
 void nonadiabaticPropagator::step()
@@ -103,8 +119,8 @@ void nonadiabaticPropagator::step()
     // flag = CVDense(cvode_mem_, nEq);
     if (check_flag(&flag,(char *)"CVSolver", 1))
       throw std::runtime_error("Error during CVODE step with solver function.");
-    index_flag_ = ii;
 
+    index_flag_ = ii;
     flag = CVode(cvode_managers_.at(ii), tFinal, ys_.at(ii), &t, CV_NORMAL);
     if (check_flag(&flag, (char *)"CVode", 1))
       throw std::runtime_error("Error during CVODE step with CVode function.");

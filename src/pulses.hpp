@@ -13,7 +13,7 @@ public:
 	double sigma_;
 	double t0_;
 	pulse (double, double, double);
-	double evaluate(double t);
+	double evaluate(double);
 };
 
 #endif

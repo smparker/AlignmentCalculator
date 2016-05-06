@@ -181,7 +181,7 @@ void inputParameters::parseNumericalParams(boost::property_tree::ptree &IP)
   if (jobtype_ == JOBTYPE::NONADIABATIC)
   {
     n_outputs_ = IP.get<int>("Numerical.n_outputs",1000);
-    max_time_  = IP.get<double>("Numerical.maximum_time",100.0)*CONSTANTS::AUperFS;
+    max_time_  = IP.get<double>("Numerical.maximum_time",100.0)*CONSTANTS::AUperFS*1000.0;
     atol_ = IP.get<double>("Numerical.atol", 1.0e-8);
     rtol_ = IP.get<double>("Numerical.rtol", 1.0e-6);
   }

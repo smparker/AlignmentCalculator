@@ -19,10 +19,9 @@ class nonadiabaticPropagator : public propagatorBase
 {
 public:
   bool firstRun_;
+  int noutputs_;
   int index_flag_;
-  double t0_, dt_, time_;
-  double tFinal_;
-  double noutputs_;
+  double t0_, dt_, time_,tFinal_;
   double atol_,rtol_;
   std::vector<pulse> pulses_;
   std::vector<N_Vector> atols_,ys_;

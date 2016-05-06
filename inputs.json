@@ -22,15 +22,9 @@
     "pulses":
     [
       {
-        "pulse_max_intensity":1.0, // W/cm^2
-        "pulse_fwhm":2.0, // fs
-        "pulse_center":3.0 //fs
-      },
-      {
-        "pulse_max_intensity":10.0, // W/cm^2
-        "pulse_fwhm":20.0, // fs
-        "pulse_center":30.0 //fs
-
+        "pulse_max_intensity":1.0e12, // W/cm^2
+        "pulse_fwhm":100.0, // fs
+        "pulse_center":500.0 //fs
       }
     ]
   },

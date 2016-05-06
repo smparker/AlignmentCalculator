@@ -81,7 +81,7 @@ std::shared_ptr<matrices> linearMolecule::createFieldFreeHamiltonians(std::share
 std::shared_ptr<matrices> linearMolecule::createInteractionHamiltonians(std::shared_ptr<basisSubsets> sets)
 {
   auto intHams = std::make_shared<matrices>();
-  double coeff = (-1.0/4.0)*abs(pol_.aZZ_ - pol_.aXX_);
+  double coeff = (-1.0/4.0)*std::abs(pol_.aZZ_ - pol_.aXX_);
   for (auto &set : *sets)
   {
     int N = set->size();

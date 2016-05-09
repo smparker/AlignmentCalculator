@@ -46,7 +46,10 @@ void nonadiabaticPropagator::initializeOutputs(inputParameters &IP)
 
   // Initialize observable objects
   if (IP.output_cos3D_) observables_.push_back(std::make_shared<obsCosTheta3D>(basisSets_,fieldFreeHamiltonians_));
-  
+  if (IP.output_chi3D_) observables_.push_back(std::make_shared<obsCosChi>(basisSets_,fieldFreeHamiltonians_));
+  if (IP.output_J_) observables_.push_back(std::make_shared<obsJ>(basisSets_,fieldFreeHamiltonians_));
+  if (IP.output_K_) observables_.push_back(std::make_shared<obsK>(basisSets_,fieldFreeHamiltonians_));
+  if (IP.output_M_) observables_.push_back(std::make_shared<obsM>(basisSets_,fieldFreeHamiltonians_));
 
 
   // Print data identifiers

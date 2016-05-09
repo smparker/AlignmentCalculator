@@ -46,19 +46,25 @@ public:
   void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
 };
 
-// class obsJ : public observable
-// {
+class obsJ : public observable
+{
+public:
+  obsJ(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
+  void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
+};
 
-// };
+class obsK : public observable
+{
+public:
+  obsK(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
+  void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
+};
 
-// class obsK : public observable
-// {
-
-// };
-
-// class obsM : public observable
-// {
-
-// };
+class obsM : public observable
+{
+public:
+  obsM(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
+  void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
+};
 
 #endif

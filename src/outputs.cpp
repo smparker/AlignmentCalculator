@@ -1,10 +1,11 @@
 #include "outputs.hpp"
 
+/**************
+  Base Class
+***************/
 
 observable::observable(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians)
-{
-
-}
+{}
 
 double observable::evaluate_(std::shared_ptr<matrices> densities_)
 {
@@ -17,6 +18,9 @@ double observable::evaluate_(std::shared_ptr<matrices> densities_)
   return val;
 }
 
+/********************
+  Derived Observables
+*********************/
 
 obsCosTheta3D::obsCosTheta3D(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
   observable(basisSets,fieldFreeHamiltonians)
@@ -71,6 +75,68 @@ void obsCosChi::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_
           operator_matrix_->back()->element(ii,jj) += (1.0/3.0);
       }
     }
+  }
+}
+
+
+
+obsJ::obsJ(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
+  observable(basisSets,fieldFreeHamiltonians)
+{
+  id_tag_ = "<J>";
+  initialize_(basisSets,fieldFreeHamiltonians);
+}
+
+void obsJ::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians)
+{
+  operator_matrix_ = std::make_shared<matrices>();
+  for (auto &set : *basisSets)
+  {
+    int N = set->size();
+    operator_matrix_->push_back(std::make_shared<matrixComp>(N,N));
+    for (int ii = 0; ii < N; ii++)
+      for (int jj = 0; jj < N; jj++)
+        operator_matrix_->back()->element(ii,ii) = set->at(ii).J;
+  }
+}
+
+obsK::obsK(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
+  observable(basisSets,fieldFreeHamiltonians)
+{
+  id_tag_ = "<K>";
+  initialize_(basisSets,fieldFreeHamiltonians);
+}
+
+void obsK::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians)
+{
+  operator_matrix_ = std::make_shared<matrices>();
+  for (auto &set : *basisSets)
+  {
+    int N = set->size();
+    operator_matrix_->push_back(std::make_shared<matrixComp>(N,N));
+    for (int ii = 0; ii < N; ii++)
+      for (int jj = 0; jj < N; jj++)
+        operator_matrix_->back()->element(ii,ii) = set->at(ii).K;
+  }
+}
+
+obsM::obsM(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
+  observable(basisSets,fieldFreeHamiltonians)
+{
+  id_tag_ = "<M>";
+  initialize_(basisSets,fieldFreeHamiltonians);
+}
+
+void obsM::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians)
+{
+  operator_matrix_ = std::make_shared<matrices>();
+  for (auto &set : *basisSets)
+  {
+    int N = set->size();
+    operator_matrix_->push_back(std::make_shared<matrixComp>(N,N));
+    for (int ii = 0; ii < N; ii++)
+      for (int jj = 0; jj < N; jj++)
+        operator_matrix_->back()->element(ii,ii) = set->at(ii).M;
   }
 }
 

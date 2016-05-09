@@ -1,3 +1,28 @@
+#include "outputs.hpp"
+
+observable::observable(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians)
+{
+
+}
+
+
+
+obsCosTheta3D::obsCosTheta3D(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
+  observable(basisSets,fieldFreeHamiltonians)
+{
+  id_tag_ = "<cos^2 theta>_3D";
+  initialize_(basisSets,fieldFreeHamiltonians);
+}
+
+void obsCosTheta3D::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians)
+{
+
+}
+
+double obsCosTheta3D::evaluate_(std::shared_ptr<matrices> densities_)
+{
+  return 0;
+}
 
 
  // Prints out the basis set from a basisSubsets object

@@ -10,8 +10,7 @@
 class propagatorBase
 {
 public:
-  double partition_function_;
-  double temperature_;
+  double partition_function_, temperature_;
   MOLSYM symmetry_;
   std::shared_ptr<moleculeBase> molecule_;
   std::shared_ptr<basisSubsets> basisSets_;
@@ -19,12 +18,13 @@ public:
   std::shared_ptr<matrices> intHamiltonians_;
   std::shared_ptr<matrices> densities_;
   std::shared_ptr<arrays> populations_;
-  std::vector<observable> observables_;
+  std::vector<std::shared_ptr<observable>> observables_;
 
   propagatorBase();
   propagatorBase(inputParameters &IP);
   MOLSYM determineSymmetry(inputParameters &IP);
-  void setupOutputs();
+  virtual void initializeOutputs(inputParameters &IP) = 0;
+  virtual void printOutputs() = 0;
 };
 
 #endif

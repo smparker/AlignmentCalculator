@@ -12,10 +12,12 @@ int main(int argc, char const *argv[])
   }
   inputParameters inputs(argv[1]);
   if (inputs.jobtype_ == JOBTYPE::NONADIABATIC)
+  {
     nonadiabaticPropagator calculation(inputs);
+    calculation.run();
+  }
   // else if (inputs.jobtype_ == JOBTYPE::ADIABATIC)
   //   adiabaticPropagator calculation(inputs);
-
 
   return(0);
 }

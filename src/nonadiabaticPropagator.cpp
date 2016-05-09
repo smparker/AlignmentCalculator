@@ -16,8 +16,7 @@ nonadiabaticPropagator::nonadiabaticPropagator(inputParameters &IP) :
 {
   dt_ = (tFinal_ - t0_) / noutputs_;
   initializeCVODE();
-  for (int ii = 0; ii < 1000; ii++)
-    step();
+  initializeOutputs(IP);
 }
 
 void nonadiabaticPropagator::initializeCVODE()
@@ -38,12 +37,30 @@ void nonadiabaticPropagator::initializeCVODE()
   }
 }
 
+void nonadiabaticPropagator::initializeOutputs(inputParameters &IP)
+{
+  // Setup Output stream
+  output_file_name_ = IP.molecule_name_ + "_nonad.txt";
+  out_file_.open("output_file_name_");
+
+  // Initialize observable objects
+  if (IP.output_cos3D_) observables_.push_back(std::make_shared<obsCosTheta3D>(basisSets_,fieldFreeHamiltonians_));
+  // Print data identifiers
+  out_file_ << "Time (ps)\t";
+  for (auto obs : observables_)
+    out_file_ << obs->id_tag_ << "\t";
+  out_file_ << std::endl;
+}
+
+void nonadiabaticPropagator::printOutputs()
+{
+
+}
+
 void nonadiabaticPropagator::run()
 {
-#if 0
-  // step for each time step
-  // calculate outputs at each step
-#endif
+  for (int ii = 0; ii < noutputs_; ii++)
+    step();
 }
 
 int nonadiabaticPropagator::evalRHS(realtype t, N_Vector y, N_Vector ydot, void *user_data)

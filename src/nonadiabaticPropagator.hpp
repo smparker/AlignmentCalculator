@@ -23,14 +23,18 @@ public:
   int index_flag_;
   double t0_, dt_, time_,tFinal_;
   double atol_,rtol_;
+  std::string output_file_name_;
+  std::ofstream out_file_;
   std::vector<pulse> pulses_;
   std::vector<N_Vector> atols_,ys_;
   std::vector<void*> cvode_managers_;
   nonadiabaticPropagator(inputParameters &IP);
   void initializeCVODE();
+  void initializeOutputs(inputParameters &IP);
   static int evalRHS(realtype t, N_Vector y, N_Vector ydot, void *user_data);
   void step();
   void run();
+  void printOutputs();
 };
 
 

@@ -52,7 +52,6 @@ public:
   bool output_cos2D_; ///< Outputs projection of cosine squared onto a unit disk
   bool output_cos3D_; ///< Outputs cosine squared
   bool output_energy_; ///< Outputs total energy
-  bool output_intensity_; ///< Outputs the laser/field intensity
   bool output_J_; ///< Output expectation value for J quantum number
   bool output_K_; ///< Output expectation value for K quantum number
   bool output_M_; ///< Output expectation value for M quantum number

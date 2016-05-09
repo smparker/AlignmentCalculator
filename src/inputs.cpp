@@ -189,5 +189,5 @@ void inputParameters::parseNumericalParams(boost::property_tree::ptree &IP)
 
 void inputParameters::parseOutputsInfo(boost::property_tree::ptree &IP)
 {
-
+  output_cos3D_ = IP.get<bool>("Outputs.cos3D",false);
 }

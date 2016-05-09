@@ -22,8 +22,8 @@ linearMolecule::linearMolecule(inputParameters &IP) :
   moleculeBase(IP)
 {
   rot_.Be_  = IP.rotational_constants_[0];
-  pol_.aZZ_ = IP.polarizabilities_[0];
-  pol_.aXX_ = pol_.aYY_ = IP.polarizabilities_[1];
+  pol_.aZZ_ = IP.polarizabilities_[2];
+  pol_.aXX_ = pol_.aYY_ = IP.polarizabilities_[0];
 }
 
 std::shared_ptr<basisSubsets> linearMolecule::createBasisSets(int JMAX)

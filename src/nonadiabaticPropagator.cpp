@@ -1,5 +1,6 @@
 #include "nonadiabaticPropagator.hpp"
 #include "utilities.hpp"
+#include "constants.hpp"
 
 #define Ith(v,i)    NV_Ith_S(v,i-1)       /* Ith numbers components 1..NEQ */
 
@@ -41,20 +42,26 @@ void nonadiabaticPropagator::initializeOutputs(inputParameters &IP)
 {
   // Setup Output stream
   output_file_name_ = IP.molecule_name_ + "_nonad.txt";
-  out_file_.open("output_file_name_");
+  out_file_.open(output_file_name_);
 
   // Initialize observable objects
   if (IP.output_cos3D_) observables_.push_back(std::make_shared<obsCosTheta3D>(basisSets_,fieldFreeHamiltonians_));
+  
+
+
   // Print data identifiers
-  out_file_ << "Time (ps)\t";
+  out_file_ << "#Time (ps)";
   for (auto obs : observables_)
-    out_file_ << obs->id_tag_ << "\t";
+    out_file_ << "\t" << obs->id_tag_;
   out_file_ << std::endl;
 }
 
 void nonadiabaticPropagator::printOutputs()
 {
-
+  out_file_ << time_/CONSTANTS::AUperFS/1000.0 << "\t";
+  for (auto obs : observables_)
+    out_file_ << "\t" << obs->evaluate_(densities_);
+  out_file_ << std::endl;
 }
 
 void nonadiabaticPropagator::run()
@@ -104,6 +111,7 @@ void nonadiabaticPropagator::step()
   double tInit  = time_;
   double tFinal = time_ + dt_;
   realtype t;
+  printOutputs();
   for (int ii = 0; ii < basisSets_->size(); ii++)
   {
     // if the population is too small, skip this set

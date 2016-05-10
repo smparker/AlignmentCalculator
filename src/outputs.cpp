@@ -49,14 +49,14 @@ void obsCosTheta3D::initialize_(std::shared_ptr<basisSubsets> basisSets,std::sha
   }
 }
 
-obsCosChi::obsCosChi(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
+obsCosThetaAlt::obsCosThetaAlt(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
   observable(basisSets,fieldFreeHamiltonians)
 {
   id_tag_ = "<cos^2 chi>_3D";
   initialize_(basisSets,fieldFreeHamiltonians);
 }
 
-void obsCosChi::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians)
+void obsCosThetaAlt::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians)
 {
   operator_matrix_ = std::make_shared<matrices>();
   for (auto &set : *basisSets)

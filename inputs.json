@@ -5,7 +5,7 @@
     "molecule_name":"N2", // For file management
     "library_file":"Molecules.json", // Optional if molecule info in another file
     "library_molecule":"N2", // Molecule to grab from input file
-    "rotational_temperature": 10.0, //Temperature in Kelvin
+    "rotational_temperature": 5.0, //Temperature in Kelvin
     // "polarizability_components":[10.0,0.0,0.0],
     // "rotational_constants":[1.0e-6],
     "odd_J_degeneracy": 1.0, // used to include nuclear spin degeneracy, only for linear molecules
@@ -22,17 +22,17 @@
     "pulses":
     [
       {
-        "pulse_max_intensity":1.0e12, // W/cm^2
-        "pulse_fwhm":100.0, // fs
+        "pulse_max_intensity":1.0e13, // W/cm^2
+        "pulse_fwhm":300.0, // fs
         "pulse_center":500.0 //fs
       }
     ]
   },
   "Numerical":
   {
-    "maximum_J":40, // estimate if no input given
+    "maximum_J":24, // estimate if no input given
     "n_outputs":1000, // only needed for nonadiabatic calculations
-    "maximum_time": 10.0, // ps
+    "maximum_time": 20.0, // ps
     "atol":1.0e-8, // DiffEq Absolute Tolerance
     "rtol":1.0e-6 // DiffEq Relative Tolerance
   },
@@ -44,7 +44,7 @@
     "density":false, // only supported for adiabatic alignment, outputs real space density of wavefunction or density matrix
     "cos2D":false, //projection of alignment, only supported for linear molecules
     "cos3D":true,
-    "chi3D":true,
+    "cos3DAlt":true,
     "energy":true,
     "expJ":true,
     "expK":true,

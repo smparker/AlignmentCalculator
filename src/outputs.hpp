@@ -39,10 +39,10 @@ public:
 
 // };
 
-class obsCosChi : public observable
+class obsCosThetaAlt : public observable
 {
 public:
-  obsCosChi(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
+  obsCosThetaAlt(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
   void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
 };
 

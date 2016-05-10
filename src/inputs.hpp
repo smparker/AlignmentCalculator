@@ -51,7 +51,7 @@ public:
   bool output_coupling_matrix_; ///< Outputs couplings
   bool output_cos2D_; ///< Outputs projection of cosine squared onto a unit disk
   bool output_cos3D_; ///< Outputs cosine squared
-  bool output_chi3D_; ///< Outputs chi squared expectation value
+  bool output_cos3DAlt_; ///< Outputs chi squared expectation value
   bool output_energy_; ///< Outputs total energy
   bool output_J_; ///< Output expectation value for J quantum number
   bool output_K_; ///< Output expectation value for K quantum number

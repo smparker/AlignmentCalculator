@@ -190,7 +190,7 @@ void inputParameters::parseNumericalParams(boost::property_tree::ptree &IP)
 void inputParameters::parseOutputsInfo(boost::property_tree::ptree &IP)
 {
   output_cos3D_ = IP.get<bool>("Outputs.cos3D",false);
-  output_chi3D_ = IP.get<bool>("Outputs.chi3D",false);
+  output_cos3DAlt_ = IP.get<bool>("Outputs.cos3DAlt",false);
   output_J_     = IP.get<bool>("Outputs.expJ",false);
   output_K_     = IP.get<bool>("Outputs.expK",false);
   output_M_     = IP.get<bool>("Outputs.expM",false);

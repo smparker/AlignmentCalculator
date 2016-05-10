@@ -34,10 +34,12 @@ public:
 
 // };
 
-// class obsEnergy : public observable
-// {
-
-// };
+class obsEnergy : public observable
+{
+public:
+  obsEnergy(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
+  void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
+};
 
 class obsCosThetaAlt : public observable
 {

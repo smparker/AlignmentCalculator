@@ -68,6 +68,7 @@ public:
 class symmetricTopMolecule : public moleculeBase
 {
 public:
+  MOLSYM symmetry_;
   symmetricTopMolecule(inputParameters &IP);
   std::shared_ptr<basisSubsets> createBasisSets(int JMAX);
   std::shared_ptr<matrices> createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets);

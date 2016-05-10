@@ -49,6 +49,18 @@ void obsCosTheta3D::initialize_(std::shared_ptr<basisSubsets> basisSets,std::sha
   }
 }
 
+obsEnergy::obsEnergy(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
+  observable(basisSets,fieldFreeHamiltonians)
+{
+  id_tag_ = "<H>(field-free)";
+  initialize_(basisSets,fieldFreeHamiltonians);
+}
+
+void obsEnergy::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians)
+{
+  operator_matrix_ = fieldFreeHamiltonians;
+}
+
 obsCosThetaAlt::obsCosThetaAlt(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
   observable(basisSets,fieldFreeHamiltonians)
 {
@@ -83,7 +95,7 @@ void obsCosThetaAlt::initialize_(std::shared_ptr<basisSubsets> basisSets,std::sh
 obsJ::obsJ(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
   observable(basisSets,fieldFreeHamiltonians)
 {
-  id_tag_ = "<J>";
+  id_tag_ = "<J(J+1)>";
   initialize_(basisSets,fieldFreeHamiltonians);
 }
 
@@ -96,14 +108,14 @@ void obsJ::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<m
     operator_matrix_->push_back(std::make_shared<matrixComp>(N,N));
     for (int ii = 0; ii < N; ii++)
       for (int jj = 0; jj < N; jj++)
-        operator_matrix_->back()->element(ii,ii) = set->at(ii).J;
+        operator_matrix_->back()->element(ii,ii) = (set->at(ii).J+1)*(set->at(ii).J);
   }
 }
 
 obsK::obsK(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
   observable(basisSets,fieldFreeHamiltonians)
 {
-  id_tag_ = "<K>";
+  id_tag_ = "<K^2>";
   initialize_(basisSets,fieldFreeHamiltonians);
 }
 
@@ -116,7 +128,7 @@ void obsK::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<m
     operator_matrix_->push_back(std::make_shared<matrixComp>(N,N));
     for (int ii = 0; ii < N; ii++)
       for (int jj = 0; jj < N; jj++)
-        operator_matrix_->back()->element(ii,ii) = set->at(ii).K;
+        operator_matrix_->back()->element(ii,ii) = pow(set->at(ii).K,2);
   }
 }
 

@@ -15,6 +15,7 @@ int main(int argc, char const *argv[])
   {
     nonadiabaticPropagator calculation(inputs);
     calculation.run();
+    calculation.outputBasisStats();
   }
   // else if (inputs.jobtype_ == JOBTYPE::ADIABATIC)
   //   adiabaticPropagator calculation(inputs);

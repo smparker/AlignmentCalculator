@@ -58,3 +58,19 @@ MOLSYM propagatorBase::determineSymmetry(inputParameters &IP)
   }
   throw std::runtime_error("Cannot determine molecule symmetry. Not sure how this line of code was ever reached.");
 }
+
+void propagatorBase::outputBasisStats()
+{
+  std::ofstream outFile;
+  outFile.open("basisStatistics.txt");
+  for (int ii = 0; ii < basisSets_->size(); ii++)
+  {
+    for (int jj = 0; jj < basisSets_->at(ii)->size(); jj++)
+      outFile << basisSets_->at(ii)->at(jj).J << " "
+              << basisSets_->at(ii)->at(jj).K << " "
+              << basisSets_->at(ii)->at(jj).M << " "
+              << fieldFreeHamiltonians_->at(ii)->element(jj,jj).real() << " "
+              << densities_->at(ii)->element(jj,jj).real() << "\n";
+  }
+  outFile.close();
+}

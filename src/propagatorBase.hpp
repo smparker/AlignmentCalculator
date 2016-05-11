@@ -22,6 +22,7 @@ public:
 
   propagatorBase();
   propagatorBase(inputParameters &IP);
+  void outputBasisStats();
   MOLSYM determineSymmetry(inputParameters &IP);
   virtual void initializeOutputs(inputParameters &IP) = 0;
   virtual void printOutputs() = 0;

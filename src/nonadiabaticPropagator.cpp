@@ -31,7 +31,7 @@ void nonadiabaticPropagator::initializeCVODE()
     ys_.push_back(N_VNew_Serial(nEq));
     if (check_flag((void *)ys_.back(), (char *)"N_VNew_Serial", 0))
       throw std::runtime_error("Error allocating space for y vector");
-    // cvode_managers_.pushback(CVodeCreate(CV_BDF, CV_NEWTON));
+    // cvode_managers_.push_back(CVodeCreate(CV_BDF, CV_NEWTON));
     cvode_managers_.push_back(CVodeCreate(CV_ADAMS, CV_FUNCTIONAL));
     if (check_flag((void *)cvode_managers_.back(), (char *)"CVodeCreate", 0))
       throw std::runtime_error("Error allocating cvode object");
@@ -119,7 +119,7 @@ void nonadiabaticPropagator::step()
   for (int ii = 0; ii < basisSets_->size(); ii++)
   {
     // if the population is too small, skip this set
-    if (densities_->at(ii)->trace().real() < 1.0e-6)
+    if (densities_->at(ii)->trace().real() < 1.0e-4)
       continue;
     int nEq = pow(basisSets_->at(ii)->size(),2)*2;
     flag    = CVodeSetUserData(cvode_managers_.at(ii),(void*)this);

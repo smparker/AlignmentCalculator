@@ -11,6 +11,11 @@ propagatorBase::propagatorBase(inputParameters &IP) :
   else
     molecule_ = std::make_shared<asymmetricTopMolecule>(IP);
   basisSets_             = molecule_->createBasisSets(IP.max_j);
+  initialize_();
+}
+
+void propagatorBase::initialize_()
+{
   fieldFreeHamiltonians_ = molecule_->createFieldFreeHamiltonians(basisSets_);
   intHamiltonians_       = molecule_->createInteractionHamiltonians(basisSets_);
   populations_           = molecule_->initializePopulations(basisSets_,fieldFreeHamiltonians_,temperature_);

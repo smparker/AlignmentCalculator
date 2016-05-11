@@ -2,12 +2,12 @@
   "Jobtype":"nonadiabatic", // "adiabatic" or "nonadiabatic"
   "Molecule":
   {
-    "molecule_name":"N2", // For file management
-    "library_file":"Molecules.json", // Optional if molecule info in another file
-    "library_molecule":"N2", // Molecule to grab from input file
-    "rotational_temperature": 5.0, //Temperature in Kelvin
-    // "polarizability_components":[10.0,0.0,0.0],
-    // "rotational_constants":[1.0e-6],
+    "molecule_name":"Test", // For file management
+    // "library_file":"Molecules.json", // Optional if molecule info in another file
+    // "library_molecule":"N2", // Molecule to grab from input file
+    "rotational_temperature": 0.0, //Temperature in Kelvin
+    "polarizability_components":[145.089,103.249,68.833],
+    "rotational_constants":[8.62031e-07,1.14050e-07,1.00708e-07],
     "odd_J_degeneracy": 1.0, // used to include nuclear spin degeneracy, only for linear molecules
     "even_J_degeneracy": 1.0
   },

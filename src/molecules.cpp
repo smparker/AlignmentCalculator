@@ -59,7 +59,6 @@ std::shared_ptr<basisSubsets> linearMolecule::createBasisSets(int JMAX)
     basis_set->push_back(set.second);
 
   return basis_set;
-
 }
 
 std::shared_ptr<matrices> linearMolecule::createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets)
@@ -257,10 +256,8 @@ std::shared_ptr<arrays> symmetricTopMolecule::initializePopulations(std::shared_
   partition_function_ = 0.0;
   for (int ii = 0; ii < sets->size(); ii++)
   {
-    auto basisSet = sets->at(ii);
     auto Hamiltonian = ffHam->at(ii);
-    int N = basisSet->size();
-
+    int N = Hamiltonian->nr();
     pops->push_back(std::make_shared<std::vector<double>>(N,0.0));
 
     for (int jj = 0; jj < N; jj++)
@@ -322,17 +319,77 @@ std::shared_ptr<matrices> symmetricTopMolecule::createInteractionHamiltonians(st
 asymmetricTopMolecule::asymmetricTopMolecule(inputParameters &IP) :
   moleculeBase(IP)
 {
+  rot_.Ae_ = IP.rotational_constants_[2];
+  pol_.aXX_ = IP.polarizabilities_[2];
+  rot_.Be_ = IP.rotational_constants_[1];
+  pol_.aYY_ = IP.polarizabilities_[1];
+  rot_.Ce_ = IP.rotational_constants_[0];
+  pol_.aZZ_ = IP.polarizabilities_[0];
 
+  // Figure out which coordinate system to use. See Zare, pg 268-269
+  if ( std::abs(IP.rotational_constants_[0] - IP.rotational_constants_[1])/IP.rotational_constants_[0] < 0.01 ) //prolate top case
+  {
+    std::cout << "Selecting Prolate-like coordinate system" << std::endl;
+    Xe_ = IP.rotational_constants_[0]; pol_.aXX_ = IP.polarizabilities_[0];
+    Ye_ = IP.rotational_constants_[2]; pol_.aYY_ = IP.polarizabilities_[2];
+    Ze_ = IP.rotational_constants_[1]; pol_.aZZ_ = IP.polarizabilities_[1];
+  }
+  else if ( std::abs(IP.rotational_constants_[1] - IP.rotational_constants_[2])/IP.rotational_constants_[1] < 0.01 ) //oblate top case
+  {
+    std::cout << "Selecting Oblate-like coordinate system" << std::endl;
+    Xe_ = IP.rotational_constants_[0]; pol_.aXX_ = IP.polarizabilities_[0];
+    Ye_ = IP.rotational_constants_[1]; pol_.aYY_ = IP.polarizabilities_[1];
+    Ze_ = IP.rotational_constants_[2]; pol_.aZZ_ = IP.polarizabilities_[2];
+  }
+  else
+  {
+    std::cout << "Selecting General Asymmetric coordinate system" << std::endl;
+    Xe_ = IP.rotational_constants_[2]; pol_.aXX_ = IP.polarizabilities_[2];
+    Ye_ = IP.rotational_constants_[1]; pol_.aYY_ = IP.polarizabilities_[1];
+    Ze_ = IP.rotational_constants_[0]; pol_.aZZ_ = IP.polarizabilities_[0];
+  }
 }
 
 std::shared_ptr<basisSubsets> asymmetricTopMolecule::createBasisSets(int JMAX)
 {
+  // Makes basis sets assuming M is conserved and J couples only to other J of the same parity
+  auto basis_set = std::make_shared<basisSubsets>();
+  std::map<int,std::shared_ptr<basisSubset>> oddBasisSets, evenBasisSets;
+  // Even J symmetry sets
+  for (int jj = 0; jj <= JMAX; jj+=2)
+  {
+    for (int mm = -1*jj; mm <= jj; mm++)
+    {
+      if (evenBasisSets.find(mm) == evenBasisSets.end())
+        evenBasisSets[mm] = std::make_shared<basisSubset>();
+      evenBasisSets[mm]->push_back( basis(jj,0,mm) );
+    }
+  }
+  // Odd J symmetry sets
+  for (int jj = 1; jj <= JMAX; jj+=2)
+  {
+    for (int mm = -1*jj; mm <= jj; mm++)
+    {
+      if (evenBasisSets.find(mm) == evenBasisSets.end())
+        evenBasisSets[mm] = std::make_shared<basisSubset>();
+      evenBasisSets[mm]->push_back( basis(jj,0,mm) );
+    }
+  }
 
+  // Append all sets to a single list
+  for (auto set : evenBasisSets)
+    basis_set->push_back(set.second);
+  for (auto set : oddBasisSets)
+    basis_set->push_back(set.second);
+
+  return basis_set;
 }
 
 std::shared_ptr<matrices> asymmetricTopMolecule::createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets)
 {
 
+
+  constructTransformationMatrices();
 }
 
 std::shared_ptr<arrays> asymmetricTopMolecule::initializePopulations(std::shared_ptr<basisSubsets> sets, std::shared_ptr<matrices> ffHam, double temperature)
@@ -346,6 +403,11 @@ std::shared_ptr<matrices> asymmetricTopMolecule::initializeDensities(std::shared
 }
 
 std::shared_ptr<matrices> asymmetricTopMolecule::createInteractionHamiltonians(std::shared_ptr<basisSubsets> sets)
+{
+
+}
+
+void asymmetricTopMolecule::constructTransformationMatrices()
 {
 
 }

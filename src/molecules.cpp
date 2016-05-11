@@ -223,8 +223,31 @@ std::shared_ptr<basisSubsets> symmetricTopMolecule::createBasisSets(int JMAX)
 
 std::shared_ptr<matrices> symmetricTopMolecule::createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets)
 {
+  auto ffHams = std::make_shared<matrices>();
+  double A,C;
+  if (symmetry_ == MOLSYM::SYMMETRIC_OBLATE)
+  {
+    A = rot_.Ae_;
+    C = rot_.Ce_ - rot_.Ae_;
+  }
+  else
+  {
+    A = rot_.Ce_;
+    C = rot_.Ae_ - rot_.Ce_;
+  }
 
-
+  for (auto &set : *sets)
+  {
+    int N = set->size();
+    ffHams->push_back(std::make_shared<matrixComp>(N,N));
+    for (int ii = 0; ii < N; ii++)
+    {
+      int J = set->at(ii).J;
+      int K = set->at(ii).K;
+      ffHams->back()->element(ii,ii) = A*J*(J+1) + C*K*K;
+    }
+  }
+  return ffHams;
 }
 
 std::shared_ptr<arrays> symmetricTopMolecule::initializePopulations(std::shared_ptr<basisSubsets> sets, std::shared_ptr<matrices> ffHam, double temperature)
@@ -241,6 +264,80 @@ std::shared_ptr<matrices> symmetricTopMolecule::initializeDensities(std::shared_
 
 std::shared_ptr<matrices> symmetricTopMolecule::createInteractionHamiltonians(std::shared_ptr<basisSubsets> sets)
 {
+
+  auto intHams = std::make_shared<matrices>();
+  double coeff = (-1.0/4.0)*std::abs(pol_.aZZ_ - pol_.aXX_);
+  for (auto &set : *sets)
+  {
+    int N = set->size();
+    intHams->push_back(std::make_shared<matrixComp>(N,N));
+    for (int ii = 0; ii < N; ii++)
+    {
+      for (int jj = 0; jj < N; jj++)
+      {
+        double coupling = FMIME( set->at(ii).J, set->at(ii).K, set->at(ii).M,0,0,set->at(jj).J, set->at(jj).K ,set->at(jj).M);
+          intHams->back()->element(ii,jj) += (2.0/3.0)*coeff*coupling;
+      }
+    }
+  }
+  return intHams;
+
+
+
+
+
+#if 0
+
+  for (auto basisSet : basisSets_)
+  {
+
+    }
+    double interaction;
+    for (int ii = 0; ii < N; ii++)
+    {
+      for (int jj = 0; jj < N; jj++)
+      {
+        if (abs((*basisSet)[ii][0]-(*basisSet)[jj][0]) > 2) continue; // J only couples to J,J-2,J+2
+        interaction = FMIME( (*basisSet)[ii][0], (*basisSet)[ii][1], (*basisSet)[ii][2], 0, 0, (*basisSet)[jj][0], (*basisSet)[jj][1], (*basisSet)[jj][2]);
+      }
+    }
+
+    vector<double> eigenEnergies(N,0.0);
+    matrixReal backupHamiltonian(*basisHamiltonian);
+    // basisHamiltonian->printMem();
+
+    double coeff = (-1.0/4.0)*(aaa_ - acc_)*efield;
+    for (int ii = 0; ii < basisHamiltonian->nc(); ii++)
+    {
+      for (int jj = 0; jj < basisHamiltonian->nr(); jj++)
+      {
+        double coupling = FMIME( (*basisSet)[ii][0] ,(*basisSet)[ii][1],(*basisSet)[ii][2],0,0,(*basisSet)[jj][0],(*basisSet)[jj][1],(*basisSet)[jj][2]);
+        basisHamiltonian->element(ii,jj) += (2.0/3.0)*coeff*coupling;
+      }
+    }
+    if (N  < 1000)
+      basisHamiltonian->diagonalize(eigenEnergies.data());
+    else
+      basisHamiltonian->diagonalize_alt(eigenEnergies.data());
+
+    for (int ii = 0; ii < N; ii++)
+    {
+      matrixReal groundState(*basisHamiltonian->getSub(0,ii,N,1));
+      matrixReal product((*basisCosine)*groundState);
+
+      partitionSum += partitionArray[ii];
+      cosSum += partitionArray[ii]*ddot_(groundState.nr(), groundState.data(), 1, product.data(), 1);
+
+      matrixReal productEn(backupHamiltonian*groundState);
+      energySum += partitionArray[ii]*ddot_(groundState.nr(), groundState.data(), 1, productEn.data(), 1);
+    }
+  }
+  cosSum /= partitionSum;
+  energySum /= partitionSum;
+
+  // Scale by parition fxn
+  // cout << "Alignment is: " << cosSum << endl;
+  #endif
 
 
 }

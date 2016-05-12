@@ -42,6 +42,7 @@ public:
   double partition_function_;
   polarizability pol_;
   rotationalConstants rot_;
+  std::shared_ptr<matrices> Us_,invUs_; ///< Transformation matrices
 
   moleculeBase();
   moleculeBase(inputParameters &);
@@ -81,7 +82,6 @@ class asymmetricTopMolecule : public moleculeBase
 {
 public:
   double Xe_,Ye_,Ze_; ///< Placeholders to track coordinate system
-  std::shared_ptr<matrices> Us_,invUs_; ///< Transformation matrices
   asymmetricTopMolecule(inputParameters &IP);
   void constructTransformationMatrices(std::shared_ptr<matrices>);
   std::shared_ptr<basisSubsets> createBasisSets(int JMAX);

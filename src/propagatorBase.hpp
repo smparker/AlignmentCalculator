@@ -27,7 +27,7 @@ public:
   void initialize_();
   virtual void initializeOutputs(inputParameters &IP) = 0;
   virtual void printOutputs() = 0;
-  // virtual void transformObservables();
+  virtual void transformObservables();
 };
 
 #endif

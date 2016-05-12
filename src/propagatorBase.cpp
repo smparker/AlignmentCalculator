@@ -17,11 +17,11 @@ propagatorBase::propagatorBase(inputParameters &IP) :
 void propagatorBase::initialize_()
 {
   fieldFreeHamiltonians_ = molecule_->createFieldFreeHamiltonians(basisSets_);
-  intHamiltonians_       = molecule_->createInteractionHamiltonians(basisSets_);
-  populations_           = molecule_->initializePopulations(basisSets_,fieldFreeHamiltonians_,temperature_);
-  partition_function_    = molecule_->partition_function_;
-  std::cout << "Partition function at " << temperature_ << "K is " << partition_function_ << std::endl;
-  densities_             = molecule_->initializeDensities(populations_);
+  // intHamiltonians_       = molecule_->createInteractionHamiltonians(basisSets_);
+  // populations_           = molecule_->initializePopulations(basisSets_,fieldFreeHamiltonians_,temperature_);
+  // partition_function_    = molecule_->partition_function_;
+  // std::cout << "Partition function at " << temperature_ << "K is " << partition_function_ << std::endl;
+  // densities_             = molecule_->initializeDensities(populations_);
 }
 
 MOLSYM propagatorBase::determineSymmetry(inputParameters &IP)
@@ -78,4 +78,11 @@ void propagatorBase::outputBasisStats()
               << densities_->at(ii)->element(jj,jj).real() << "\n";
   }
   outFile.close();
+}
+
+void propagatorBase::transformObservables()
+{
+  for (auto &obs : observables_)
+    for (int ii = 0; ii < obs->operator_matrix_->size(); ii++)
+      obs->operator_matrix_->at(ii) = std::make_shared<matrixComp>( *(molecule_->invUs_->at(ii)) * *(obs->operator_matrix_->at(ii)) * *(molecule_->Us_->at(ii)) );
 }

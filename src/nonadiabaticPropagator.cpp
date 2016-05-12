@@ -18,6 +18,8 @@ nonadiabaticPropagator::nonadiabaticPropagator(inputParameters &IP) :
   dt_ = (tFinal_ - t0_) / noutputs_;
   initializeCVODE();
   initializeOutputs(IP);
+  if ( (molecule_->Us_ != nullptr) && (molecule_->invUs_ != nullptr) )
+    transformObservables();
 }
 
 void nonadiabaticPropagator::initializeCVODE()

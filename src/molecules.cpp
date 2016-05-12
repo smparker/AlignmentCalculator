@@ -318,15 +318,15 @@ std::shared_ptr<matrices> symmetricTopMolecule::createInteractionHamiltonians(st
 ***************************/
 
 asymmetricTopMolecule::asymmetricTopMolecule(inputParameters &IP) :
-  moleculeBase(IP),
-  Us_(nullptr),
-  invUs_(nullptr)
+  moleculeBase(IP)
 {
-  rot_.Ae_ = IP.rotational_constants_[2];
+  Us_       = nullptr;
+  invUs_    = nullptr;
+  rot_.Ae_  = IP.rotational_constants_[2];
   pol_.aXX_ = IP.polarizabilities_[2];
-  rot_.Be_ = IP.rotational_constants_[1];
+  rot_.Be_  = IP.rotational_constants_[1];
   pol_.aYY_ = IP.polarizabilities_[1];
-  rot_.Ce_ = IP.rotational_constants_[0];
+  rot_.Ce_  = IP.rotational_constants_[0];
   pol_.aZZ_ = IP.polarizabilities_[0];
 
   // Figure out which coordinate system to use. See Zare, pg 268-269
@@ -355,38 +355,62 @@ asymmetricTopMolecule::asymmetricTopMolecule(inputParameters &IP) :
 
 std::shared_ptr<basisSubsets> asymmetricTopMolecule::createBasisSets(int JMAX)
 {
-  // Makes basis sets assuming M is conserved and J couples only to other J of the same parity
-  auto basis_set = std::make_shared<basisSubsets>();
-  std::map<int,std::shared_ptr<basisSubset>> oddBasisSets, evenBasisSets;
-  // Even J symmetry sets
-  for (int jj = 0; jj <= JMAX; jj+=2)
+ auto basis_set = std::make_shared<basisSubsets>();
+  std::map<int,std::shared_ptr<basisSubset>> oKoJBasisSets, oKeJBasisSets, eKoJBasisSets, eKeJBasisSets;
+  for (int jj = 0; jj <= JMAX; jj++)
   {
-    for (int mm = -1*jj; mm <= jj; mm++)
+    for (int kk = -1*jj; kk <= jj; kk++)
     {
-      if (evenBasisSets.find(mm) == evenBasisSets.end())
-        evenBasisSets[mm] = std::make_shared<basisSubset>();
-      evenBasisSets[mm]->push_back( basis(jj,0,mm) );
-    }
-  }
-  // Odd J symmetry sets
-  for (int jj = 1; jj <= JMAX; jj+=2)
-  {
-    for (int mm = -1*jj; mm <= jj; mm++)
-    {
-      if (evenBasisSets.find(mm) == evenBasisSets.end())
-        evenBasisSets[mm] = std::make_shared<basisSubset>();
-      evenBasisSets[mm]->push_back( basis(jj,0,mm) );
+      if (jj % 2 == 0 && kk % 2 == 0 ) // J and K even
+      {
+        for (int mm = -1*jj; mm <= jj; mm++)
+        {
+          if ( eKeJBasisSets.find(mm) == eKeJBasisSets.end() )
+            eKeJBasisSets[mm] = std::make_shared<basisSubset>();
+          eKeJBasisSets[mm]->push_back(basis(jj,kk,mm));
+        }
+      }
+      else if (jj % 2 == 0 && kk % 2 == 1) // J even, K odd
+      {
+        for (int mm = -1*jj; mm <= jj; mm++)
+        {
+          if ( oKeJBasisSets.find(mm) == oKeJBasisSets.end() )
+            oKeJBasisSets[mm] = std::make_shared<basisSubset>();
+          oKeJBasisSets[mm]->push_back(basis(jj,kk,mm));
+        }
+      }
+      else if (jj % 2 == 1 && kk % 2 == 1 ) // J and K odd
+      {
+        for (int mm = -1*jj; mm <= jj; mm++)
+        {
+          if ( oKoJBasisSets.find(mm) == oKoJBasisSets.end() )
+            oKoJBasisSets[mm] = std::make_shared<basisSubset>();
+          oKoJBasisSets[mm]->push_back(basis(jj,kk,mm));
+        }
+      }
+      else // J odd, K even
+      {
+        for (int mm = -1*jj; mm <= jj; mm++)
+        {
+          if ( eKoJBasisSets.find(mm) == eKoJBasisSets.end() )
+            eKoJBasisSets[mm] = std::make_shared<basisSubset>();
+          eKoJBasisSets[mm]->push_back(basis(jj,kk,mm));
+        }
+      }
     }
   }
 
   // Append all sets to a single list
-  for (auto set : evenBasisSets)
+  for (auto &set : oKoJBasisSets)
     basis_set->push_back(set.second);
-  for (auto set : oddBasisSets)
+  for (auto &set : oKeJBasisSets)
+    basis_set->push_back(set.second);
+  for (auto &set : eKoJBasisSets)
+    basis_set->push_back(set.second);
+  for (auto &set : eKeJBasisSets)
     basis_set->push_back(set.second);
 
-  return basis_set;
-}
+  return basis_set;}
 
 std::shared_ptr<matrices> asymmetricTopMolecule::createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets)
 {
@@ -412,9 +436,9 @@ std::shared_ptr<matrices> asymmetricTopMolecule::createFieldFreeHamiltonians(std
       {
         int j = set->at(jj).J;
         int k = set->at(jj).K;
-        if (k == K+2 && J == j)
+        if (k == (K+2) && J == j)
           ffHams->back()->element(ii,jj) += ( (Xe_-Ye_)*0.25*sqrt(double(J*(J+1)-K*(K+1)))*sqrt(double(J*(J+1)-(K+1)*(K+2))) );
-        else if (k == K-2 && J == j)
+        else if (k == (K-2) && J == j)
           ffHams->back()->element(ii,jj) += ( (Xe_-Ye_)*0.25*sqrt(double(J*(J+1)-K*(K-1)))*sqrt(double(J*(J+1)-(K-1)*(K-2))) );
       }
     }
@@ -461,7 +485,6 @@ void asymmetricTopMolecule::constructTransformationMatrices(std::shared_ptr<matr
     set->zero();
     for (int ii = 0; ii < N; ii++)
       set->element(ii,ii) = tempVec[ii];
-    std::cout << *set;
   }
 }
 

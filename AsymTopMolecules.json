@@ -87,7 +87,7 @@
     },
     "CHI3":
     {
-        "Mass": 723384.0, //atomic units
+        "Mass": 723384.0,
         "Charge": 0,
         "Multiplicity": 1,
         "Polarizability":
@@ -119,7 +119,7 @@
         }
     },
     "HCCCCl3": {
-        "Mass": 260712.0, //atomic units
+        "Mass": 260712.0,
         "Charge": 0,
         "Multiplicity": 1,
         "Polarizability": {
@@ -134,7 +134,7 @@
         }
     },
     "ethene": {
-        "Mass": 0.0, //atomic units
+        "Mass": 0.0,
         "Charge": 0,
         "Multiplicity": 1,
         "Polarizability": {
@@ -149,7 +149,7 @@
         }
     },
     "cyclohexadiene": {
-        "Mass": 0.0, //atomic units
+        "Mass": 0.0,
         "Charge": 0,
         "Multiplicity": 1,
         "Polarizability": {

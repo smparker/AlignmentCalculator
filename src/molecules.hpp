@@ -83,7 +83,7 @@ public:
   double Xe_,Ye_,Ze_; ///< Placeholders to track coordinate system
   std::shared_ptr<matrices> Us_,invUs_; ///< Transformation matrices
   asymmetricTopMolecule(inputParameters &IP);
-  void constructTransformationMatrices();
+  void constructTransformationMatrices(std::shared_ptr<matrices>);
   std::shared_ptr<basisSubsets> createBasisSets(int JMAX);
   std::shared_ptr<matrices> createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets);
   std::shared_ptr<arrays> initializePopulations(std::shared_ptr<basisSubsets>,std::shared_ptr<matrices>,double);

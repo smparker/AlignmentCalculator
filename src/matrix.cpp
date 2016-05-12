@@ -436,3 +436,15 @@ void matrixComp::diagonalize(double* eigVals)
     throw std::runtime_error("Unable to diagonalize matrix");
   return;
 }
+
+void matrixComp::invert()
+{
+  assert (nrows == ncols);
+  vector<int> ipiv(nrows+1);
+  int lwork = nrows*nrows;
+
+  vector<cplx>work(lwork);
+  int info;
+  zgetrf_(nrows,nrows,data(),nrows,ipiv.data(),info);
+  zgetri_(nrows,data(),nrows,ipiv.data(),work.data(),lwork,info);
+}

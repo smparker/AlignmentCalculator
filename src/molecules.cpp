@@ -302,9 +302,10 @@ std::shared_ptr<matrices> symmetricTopMolecule::createInteractionHamiltonians(st
     {
       for (int jj = 0; jj < N; jj++)
       {
-        if (abs(set->at(ii).J - set->at(jj).J) > 2) continue; ///< Skips unnecessary zero terms
+        if (abs(set->at(ii).J - set->at(jj).J) > 2) // Skips unnecessary zero terms
+          continue;
         double coupling = FMIME( set->at(ii).J, set->at(ii).K, set->at(ii).M,0,0,set->at(jj).J, set->at(jj).K ,set->at(jj).M);
-          intHams->back()->element(ii,jj) += (2.0/3.0)*coeff*coupling;
+        intHams->back()->element(ii,jj) += (2.0/3.0)*coeff*coupling;
       }
     }
   }
@@ -317,7 +318,9 @@ std::shared_ptr<matrices> symmetricTopMolecule::createInteractionHamiltonians(st
 ***************************/
 
 asymmetricTopMolecule::asymmetricTopMolecule(inputParameters &IP) :
-  moleculeBase(IP)
+  moleculeBase(IP),
+  Us_(nullptr),
+  invUs_(nullptr)
 {
   rot_.Ae_ = IP.rotational_constants_[2];
   pol_.aXX_ = IP.polarizabilities_[2];
@@ -416,8 +419,7 @@ std::shared_ptr<matrices> asymmetricTopMolecule::createFieldFreeHamiltonians(std
       }
     }
   }
-
-  constructTransformationMatrices();
+  constructTransformationMatrices(ffHams);
 
   return ffHams;
 }
@@ -437,9 +439,30 @@ std::shared_ptr<matrices> asymmetricTopMolecule::createInteractionHamiltonians(s
 
 }
 
-void asymmetricTopMolecule::constructTransformationMatrices()
+void asymmetricTopMolecule::constructTransformationMatrices(std::shared_ptr<matrices> offDiagHamiltonians)
 {
+  Us_    = std::make_shared<matrices>();
+  invUs_ = std::make_shared<matrices>();
 
+  for (auto &set : *offDiagHamiltonians)
+  {
+    // Allocate space for transformation matrices
+    int N = set->nr();
+    Us_   ->push_back(std::make_shared<matrixComp>(N,N));
+    invUs_->push_back(std::make_shared<matrixComp>(N,N));
+
+    // diagonalize field-free Hamiltonian, store transformation matrix
+    std::vector<double> tempVec(N,0.0);
+    set->diagonalize(tempVec.data());
+    std::copy_n(set->data(), set->size(), Us_   ->back()->data());
+    std::copy_n(set->data(), set->size(), invUs_->back()->data());
+    invUs_->back()->invert();
+
+    set->zero();
+    for (int ii = 0; ii < N; ii++)
+      set->element(ii,ii) = tempVec[ii];
+    std::cout << *set;
+  }
 }
 
 /**************************

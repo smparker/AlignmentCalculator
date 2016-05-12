@@ -301,10 +301,11 @@ public:
     return getSub_impl<matrixComp>(ii,jj,kk,ll);
   }
   void diagonalize(double* eigVals); ///< Full Diagonalization with dsyev
-
+  void invert();
 };
 
 void printMatrix(matrixComp &o, std::string filename, double *x = nullptr, double *y = nullptr);
 void printMatrix(matrixReal &o, std::string filename, double *x = nullptr, double *y = nullptr);
+
 
 #endif

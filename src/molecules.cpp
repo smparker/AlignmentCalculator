@@ -387,9 +387,39 @@ std::shared_ptr<basisSubsets> asymmetricTopMolecule::createBasisSets(int JMAX)
 
 std::shared_ptr<matrices> asymmetricTopMolecule::createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets)
 {
+  auto ffHams = std::make_shared<matrices>();
+  for (auto &set : *sets)
+  {
+    int N = set->size();
+    ffHams->push_back(std::make_shared<matrixComp>(N,N));
 
+    //Diagonal, symmetric top terms
+    for (int ii = 0; ii < N; ii++)
+    {
+      int J = set->at(ii).J;
+      int K = set->at(ii).K;
+      ffHams->back()->element(ii,ii) = (0.5*(Xe_+Ye_)*(J*(J+1)-K*K) + Ze_*K*K);
+    }
+    //Off-diagonal, asymmetric couping terms
+    for (int ii = 0; ii < N; ii++)
+    {
+      int J = set->at(ii).J;
+      int K = set->at(ii).K;
+      for (int jj = 0; jj < N; jj++)
+      {
+        int j = set->at(jj).J;
+        int k = set->at(jj).K;
+        if (k == K+2 && J == j)
+          ffHams->back()->element(ii,jj) += ( (Xe_-Ye_)*0.25*sqrt(double(J*(J+1)-K*(K+1)))*sqrt(double(J*(J+1)-(K+1)*(K+2))) );
+        else if (k == K-2 && J == j)
+          ffHams->back()->element(ii,jj) += ( (Xe_-Ye_)*0.25*sqrt(double(J*(J+1)-K*(K-1)))*sqrt(double(J*(J+1)-(K-1)*(K-2))) );
+      }
+    }
+  }
 
   constructTransformationMatrices();
+
+  return ffHams;
 }
 
 std::shared_ptr<arrays> asymmetricTopMolecule::initializePopulations(std::shared_ptr<basisSubsets> sets, std::shared_ptr<matrices> ffHam, double temperature)

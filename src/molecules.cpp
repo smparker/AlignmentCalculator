@@ -444,23 +444,85 @@ std::shared_ptr<matrices> asymmetricTopMolecule::createFieldFreeHamiltonians(std
     }
   }
   constructTransformationMatrices(ffHams);
-
   return ffHams;
-}
-
-std::shared_ptr<arrays> asymmetricTopMolecule::initializePopulations(std::shared_ptr<basisSubsets> sets, std::shared_ptr<matrices> ffHam, double temperature)
-{
-
-}
-
-std::shared_ptr<matrices> asymmetricTopMolecule::initializeDensities(std::shared_ptr<arrays>)
-{
-
 }
 
 std::shared_ptr<matrices> asymmetricTopMolecule::createInteractionHamiltonians(std::shared_ptr<basisSubsets> sets)
 {
+  int J,j,K,k,M,m;
+  double azx = pol_.aZZ_ - pol_.aXX_;
+  double azy = pol_.aZZ_ - pol_.aYY_;
+  double ayx = pol_.aYY_ - pol_.aXX_;
+  double D00coeff = (1.0/3.0)*(azx+azy);
+  double D02coeff = -1.0*ayx/sqrt(6.0);
 
+  auto intHams = std::make_shared<matrices>();
+
+  for (auto &set : *sets)
+  {
+    int N = set->size();
+    intHams->push_back(std::make_shared<matrixComp>(N,N));
+    for (int ii = 0; ii < N; ii++)
+    {
+      for (int jj = 0; jj < N; jj++)
+      {
+        J = set->at(ii).J;  j = set->at(jj).J;
+        K = set->at(ii).K;  k = set->at(jj).K;
+        M = set->at(ii).M;  m = set->at(jj).M;
+
+        if (k == K) intHams->back()->element(ii,jj) -= 0.25*D00coeff*FMIME(J,K,M,0,0,j,k,m);
+        intHams->back()->element(ii,jj) -= 0.25*D02coeff*(FMIME(J,K,M,0,2,j,k,m)+FMIME(J,K,M,0,-2,j,k,m));
+      }
+    }
+  }
+
+  // Transform into asymmetric top basis
+  for (int ii = 0; ii < intHams->size(); ii++)
+    intHams->at(ii) = std::make_shared<matrixComp>( *(invUs_->at(ii)) * *(intHams->at(ii)) * *(Us_->at(ii)) );
+
+  return intHams;
+}
+
+
+
+std::shared_ptr<arrays> asymmetricTopMolecule::initializePopulations(std::shared_ptr<basisSubsets> sets, std::shared_ptr<matrices> ffHam, double temperature)
+{
+  double temp;
+  temperature == 0.0 ? temp = 1.0e-30 : temp = temperature; ///< Avoids divide by zero error
+  auto pops = std::make_shared<arrays>();
+  partition_function_ = 0.0;
+  for (int ii = 0; ii < sets->size(); ii++)
+  {
+    auto Hamiltonian = ffHam->at(ii);
+    int N = Hamiltonian->nr();
+    pops->push_back(std::make_shared<std::vector<double>>(N,0.0));
+
+    for (int jj = 0; jj < N; jj++)
+    {
+      double popTemp = exp(-1.0*Hamiltonian->element(jj,jj).real()/(temp*CONSTANTS::BOLTZ));
+      /// Spin degeneracy statistics can be included here if need be
+      pops->back()->at(jj) = popTemp;
+      partition_function_ += popTemp;
+    }
+  }
+  // Scale everything by the partition function
+  for (auto &p : *pops)
+    std::transform(p->begin(), p->end(), p->begin(), [&](double a){return a/partition_function_;});
+
+  return pops;
+}
+
+std::shared_ptr<matrices> asymmetricTopMolecule::initializeDensities(std::shared_ptr<arrays> pops)
+{
+  auto DMs = std::make_shared<matrices>();
+  for (auto &p : *pops)
+  {
+    int N = p->size();
+    DMs->push_back(std::make_shared<matrixComp>(N,N));
+    for (int ii = 0; ii < N; ii++)
+      DMs->back()->element(ii,ii) = p->at(ii);
+  }
+  return DMs;
 }
 
 void asymmetricTopMolecule::constructTransformationMatrices(std::shared_ptr<matrices> offDiagHamiltonians)

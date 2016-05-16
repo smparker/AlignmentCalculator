@@ -229,9 +229,9 @@ std::shared_ptr<matrices> symmetricTopMolecule::createFieldFreeHamiltonians(std:
     C = rot_.Ce_ - rot_.Ae_;
   }
   else
-  {
     A = rot_.Ce_;
     C = rot_.Ae_ - rot_.Ce_;
+  {
   }
 
   for (auto &set : *sets)
@@ -322,34 +322,29 @@ asymmetricTopMolecule::asymmetricTopMolecule(inputParameters &IP) :
 {
   Us_       = nullptr;
   invUs_    = nullptr;
-  rot_.Ae_  = IP.rotational_constants_[2];
-  pol_.aXX_ = IP.polarizabilities_[2];
-  rot_.Be_  = IP.rotational_constants_[1];
-  pol_.aYY_ = IP.polarizabilities_[1];
-  rot_.Ce_  = IP.rotational_constants_[0];
-  pol_.aZZ_ = IP.polarizabilities_[0];
 
   // Figure out which coordinate system to use. See Zare, pg 268-269
-  if ( std::abs(IP.rotational_constants_[0] - IP.rotational_constants_[1])/IP.rotational_constants_[0] < 0.01 ) //prolate top case
+  // std::cout << IP.rotational_constants_[0] << " " << IP.rotational_constants_[1] << " " << IP.rotational_constants_[2] << std::endl;
+  if ( std::abs(IP.rotational_constants_[2] - IP.rotational_constants_[1])/std::abs(IP.rotational_constants_[1] - IP.rotational_constants_[0]) > 1.1 ) //prolate top case
   {
     std::cout << "Selecting Prolate-like coordinate system" << std::endl;
-    Xe_ = IP.rotational_constants_[0]; pol_.aXX_ = IP.polarizabilities_[0];
-    Ye_ = IP.rotational_constants_[2]; pol_.aYY_ = IP.polarizabilities_[2];
-    Ze_ = IP.rotational_constants_[1]; pol_.aZZ_ = IP.polarizabilities_[1];
+    Xe_ = IP.rotational_constants_[1]; pol_.aXX_ = IP.polarizabilities_[1];
+    Ye_ = IP.rotational_constants_[0]; pol_.aYY_ = IP.polarizabilities_[0];
+    Ze_ = IP.rotational_constants_[2]; pol_.aZZ_ = IP.polarizabilities_[2];
   }
-  else if ( std::abs(IP.rotational_constants_[1] - IP.rotational_constants_[2])/IP.rotational_constants_[1] < 0.01 ) //oblate top case
+  else if ( std::abs(IP.rotational_constants_[2] - IP.rotational_constants_[1])/std::abs(IP.rotational_constants_[1] - IP.rotational_constants_[0]) < 0.9 ) //oblate top case
   {
     std::cout << "Selecting Oblate-like coordinate system" << std::endl;
-    Xe_ = IP.rotational_constants_[0]; pol_.aXX_ = IP.polarizabilities_[0];
+    Xe_ = IP.rotational_constants_[2]; pol_.aXX_ = IP.polarizabilities_[2];
     Ye_ = IP.rotational_constants_[1]; pol_.aYY_ = IP.polarizabilities_[1];
-    Ze_ = IP.rotational_constants_[2]; pol_.aZZ_ = IP.polarizabilities_[2];
+    Ze_ = IP.rotational_constants_[0]; pol_.aZZ_ = IP.polarizabilities_[0];
   }
   else
   {
     std::cout << "Selecting General Asymmetric coordinate system" << std::endl;
-    Xe_ = IP.rotational_constants_[2]; pol_.aXX_ = IP.polarizabilities_[2];
-    Ye_ = IP.rotational_constants_[1]; pol_.aYY_ = IP.polarizabilities_[1];
-    Ze_ = IP.rotational_constants_[0]; pol_.aZZ_ = IP.polarizabilities_[0];
+    Xe_ = IP.rotational_constants_[0]; pol_.aXX_ = IP.polarizabilities_[0];
+    Ye_ = IP.rotational_constants_[2]; pol_.aYY_ = IP.polarizabilities_[2];
+    Ze_ = IP.rotational_constants_[1]; pol_.aZZ_ = IP.polarizabilities_[1];
   }
 }
 

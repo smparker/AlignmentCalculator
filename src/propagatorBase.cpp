@@ -40,17 +40,17 @@ MOLSYM propagatorBase::determineSymmetry(inputParameters &IP)
     for (int ii = 0; ii < 3; ii++)
       symVec.push_back(std::make_pair(IP.rotational_constants_[ii],IP.polarizabilities_[ii]));
 
-    std::sort(symVec.begin(),symVec.end(),[](std::pair<double,double> a, std::pair<double,double> b){return a.first > b.first;});
+    std::sort(symVec.begin(),symVec.end(),[](std::pair<double,double> a, std::pair<double,double> b){return a.first < b.first;});
 
     IP.rotational_constants_ = {symVec[0].first,symVec[1].first,symVec[2].first};
     IP.polarizabilities_ = {symVec[0].second,symVec[1].second,symVec[2].second};
 
-    if (symVec[1].first == symVec[2].first)
+    if (symVec[0].first == symVec[1].first)
     {
       std::cout << "SYMMETRY: Prolate Symmetric Top" << std::endl;
       return MOLSYM::SYMMETRIC_PROLATE;
     }
-    else if (symVec[0].first == symVec[1].first)
+    else if (symVec[1].first == symVec[2].first)
     {
       std::cout << "SYMMETRY: Oblate Symmetric Top" << std::endl;
       return MOLSYM::SYMMETRIC_OBLATE;

@@ -178,6 +178,7 @@ void inputParameters::parseFieldInfo(boost::property_tree::ptree &IP)
 void inputParameters::parseNumericalParams(boost::property_tree::ptree &IP)
 {
   max_j = IP.get<int>("Numerical.maximum_J",50);
+  // is_full_calc_ = IP.get<bool>("Numerical.force_full_calculation",false);
   if (jobtype_ == JOBTYPE::NONADIABATIC)
   {
     n_outputs_ = IP.get<int>("Numerical.n_outputs",1000);

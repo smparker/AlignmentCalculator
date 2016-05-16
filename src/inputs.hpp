@@ -47,6 +47,7 @@ public:
   double odd_j_degeneracy_; ///< Term to modify thermal distribution for bosonic or fermionic nuclei
   double even_j_degeneracy_;///< Same as odd_j_degeneracy
   int max_j; ///< Maximum J state to include in calculation
+  // bool is_full_calc_; ///< Forces full matrix calculation
   bool output_basis_list_; ///< Outputs list of basis functions
   bool output_coupling_matrix_; ///< Outputs couplings
   bool output_cos2D_; ///< Outputs projection of cosine squared onto a unit disk

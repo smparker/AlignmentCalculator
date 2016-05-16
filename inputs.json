@@ -22,19 +22,20 @@
     "pulses":
     [
       {
-        "pulse_max_intensity":6.6e12, // W/cm^2
-        "pulse_fwhm":300.0, // fs
-        "pulse_center":800.0 //fs
+        "pulse_max_intensity":1.0e12, // W/cm^2
+        "pulse_fwhm":1200.0, // fs
+        "pulse_center":6000.0 //fs
       }
     ]
   },
   "Numerical":
   {
-    "maximum_J":24, // estimate if no input given
+    "maximum_J":30, // estimate if no input given
     "n_outputs":500, // only needed for nonadiabatic calculations
-    "maximum_time": 30.0, // ps
+    "maximum_time": 500.0, // ps
     "atol":1.0e-8, // DiffEq Absolute Tolerance
-    "rtol":1.0e-6 // DiffEq Relative Tolerance
+    "rtol":1.0e-6, // DiffEq Relative Tolerance
+    "force_full_calculation":false
   },
   "Outputs":
   {

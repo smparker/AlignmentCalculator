@@ -27,9 +27,10 @@ public:
   std::ofstream out_file_;
   std::vector<pulse> pulses_;
   std::vector<N_Vector> atols_,ys_;
+  // std::vector<std::shared_ptr<std::vector<std::pair<int,int>>>> nonzero_indices_;
   std::vector<void*> cvode_managers_;
   nonadiabaticPropagator(inputParameters &IP);
-  void initializeCVODE();
+  void initializeCVODE(inputParameters &IP);
   void initializeOutputs(inputParameters &IP);
   static int evalRHS(realtype t, N_Vector y, N_Vector ydot, void *user_data);
   void step();

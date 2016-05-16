@@ -16,13 +16,13 @@ nonadiabaticPropagator::nonadiabaticPropagator(inputParameters &IP) :
   rtol_(IP.rtol_)
 {
   dt_ = (tFinal_ - t0_) / noutputs_;
-  initializeCVODE();
+  initializeCVODE(IP);
   initializeOutputs(IP);
   if ( (molecule_->Us_ != nullptr) && (molecule_->invUs_ != nullptr) )
     transformObservables();
 }
 
-void nonadiabaticPropagator::initializeCVODE()
+void nonadiabaticPropagator::initializeCVODE(inputParameters &IP)
 {
   for (int ii = 0; ii < basisSets_->size(); ii++)
   {
@@ -37,7 +37,7 @@ void nonadiabaticPropagator::initializeCVODE()
     cvode_managers_.push_back(CVodeCreate(CV_ADAMS, CV_FUNCTIONAL));
     if (check_flag((void *)cvode_managers_.back(), (char *)"CVodeCreate", 0))
       throw std::runtime_error("Error allocating cvode object");
-  }
+    }
 }
 
 void nonadiabaticPropagator::initializeOutputs(inputParameters &IP)

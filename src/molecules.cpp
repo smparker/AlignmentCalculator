@@ -436,10 +436,10 @@ std::shared_ptr<matrices> asymmetricTopMolecule::createFieldFreeHamiltonians(std
       {
         int j = set->at(jj).J;
         int k = set->at(jj).K;
-        if (k == (K+2) && J == j)
-          ffHams->back()->element(ii,jj) += ( (Xe_-Ye_)*0.25*sqrt(double(J*(J+1)-K*(K+1)))*sqrt(double(J*(J+1)-(K+1)*(K+2))) );
-        else if (k == (K-2) && J == j)
-          ffHams->back()->element(ii,jj) += ( (Xe_-Ye_)*0.25*sqrt(double(J*(J+1)-K*(K-1)))*sqrt(double(J*(J+1)-(K-1)*(K-2))) );
+        if (k == (K-2) && J == j)
+          ffHams->back()->element(ii,jj) += ( (Xe_-Ye_)*0.25*sqrt(double(J*(J+1)-k*(k+1)))*sqrt(double(J*(J+1)-(k+1)*(k+2))) );
+        else if (k == (K+2) && J == j)
+          ffHams->back()->element(ii,jj) += ( (Xe_-Ye_)*0.25*sqrt(double(J*(J+1)-k*(k-1)))*sqrt(double(J*(J+1)-(k-1)*(k-2))) );
       }
     }
   }
@@ -464,11 +464,14 @@ std::shared_ptr<matrices> asymmetricTopMolecule::createInteractionHamiltonians(s
     intHams->push_back(std::make_shared<matrixComp>(N,N));
     for (int ii = 0; ii < N; ii++)
     {
+      J = set->at(ii).J;
+      K = set->at(ii).K;
+      M = set->at(ii).M;
       for (int jj = 0; jj < N; jj++)
       {
-        J = set->at(ii).J;  j = set->at(jj).J;
-        K = set->at(ii).K;  k = set->at(jj).K;
-        M = set->at(ii).M;  m = set->at(jj).M;
+        j = set->at(jj).J;
+        k = set->at(jj).K;
+        m = set->at(jj).M;
 
         if (k == K) intHams->back()->element(ii,jj) -= 0.25*D00coeff*FMIME(J,K,M,0,0,j,k,m);
         intHams->back()->element(ii,jj) -= 0.25*D02coeff*(FMIME(J,K,M,0,2,j,k,m)+FMIME(J,K,M,0,-2,j,k,m));
@@ -541,7 +544,7 @@ void asymmetricTopMolecule::constructTransformationMatrices(std::shared_ptr<matr
     set->diagonalize(tempVec.data());
     std::copy_n(set->data(), set->size(), Us_   ->back()->data());
     std::copy_n(set->data(), set->size(), invUs_->back()->data());
-    Us_->back()->invert();
+    invUs_->back()->invert();
 
     set->zero();
     for (int ii = 0; ii < N; ii++)

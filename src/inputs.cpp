@@ -189,10 +189,20 @@ void inputParameters::parseNumericalParams(boost::property_tree::ptree &IP)
 
 void inputParameters::parseOutputsInfo(boost::property_tree::ptree &IP)
 {
+  // outputs derived from the observable base class
   output_cos3D_    = IP.get<bool>("Outputs.cos3D",false);
   output_energy_   = IP.get<bool>("Outputs.energy",false);
   output_cos3DAlt_ = IP.get<bool>("Outputs.cos3DAlt",false);
   output_J_        = IP.get<bool>("Outputs.expJ",false);
   output_K_        = IP.get<bool>("Outputs.expK",false);
   output_M_        = IP.get<bool>("Outputs.expM",false);
+
+// other outputs
+  output_basis_list_      = IP.get<bool>("Outputs.basis_list",false);
+  output_coupling_matrix_ = IP.get<bool>("Outputs.coupling_matrix",false);
+  output_eigenvectors_    = IP.get<bool>("Outputs.eigenvectors",false);
+  output_density_         = IP.get<bool>("Outputs.density",false);
+  chi_                    = IP.get<double>("Outputs.chi",0.0);
+  n_eigenvalues_          = IP.get<int>("Outputs.n_vecs",10);
+
 }

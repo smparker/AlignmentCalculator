@@ -475,7 +475,6 @@ std::shared_ptr<matrices> asymmetricTopMolecule::createInteractionHamiltonians(s
       }
     }
   }
-
   // Transform into asymmetric top basis
   for (int ii = 0; ii < intHams->size(); ii++)
     intHams->at(ii) = std::make_shared<matrixComp>( *(invUs_->at(ii)) * *(intHams->at(ii)) * *(Us_->at(ii)) );
@@ -542,7 +541,7 @@ void asymmetricTopMolecule::constructTransformationMatrices(std::shared_ptr<matr
     set->diagonalize(tempVec.data());
     std::copy_n(set->data(), set->size(), Us_   ->back()->data());
     std::copy_n(set->data(), set->size(), invUs_->back()->data());
-    invUs_->back()->invert();
+    Us_->back()->invert();
 
     set->zero();
     for (int ii = 0; ii < N; ii++)
@@ -554,20 +553,6 @@ void asymmetricTopMolecule::constructTransformationMatrices(std::shared_ptr<matr
   Molecule helper functions
 ***************************/
 
-/**
- * @brief Field Matter Interaction Matrix Element
- * @details Calculates the coupling between two |JKM> states in an off resonance field
- *
- * @param J J of State 1
- * @param K K of State 1
- * @param M M of State 1
- * @param Q Interaction Quantum Number
- * @param S Other Interaction Quantum Number
- * @param j J of State 2
- * @param k K of State 2
- * @param m M of State 2
- * @return Coupling Matrix Element
- */
 double FMIME (int J, int K, int M, int Q, int S, int j, int k, int m)
 {
   double coeff = pow(-1.0,k+m)*sqrt((2.0*J + 1.0)*(2.0*j+1.0));

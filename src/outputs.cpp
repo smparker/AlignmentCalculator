@@ -95,7 +95,7 @@ void obsCosThetaAlt::initialize_(std::shared_ptr<basisSubsets> basisSets,std::sh
 obsJ::obsJ(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
   observable(basisSets,fieldFreeHamiltonians)
 {
-  id_tag_ = "<J(J+1)>";
+  id_tag_ = "<J^2>";
   initialize_(basisSets,fieldFreeHamiltonians);
 }
 

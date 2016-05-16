@@ -3,8 +3,8 @@
  * \author J. Szekely
  */
 
-#ifndef QLALIB_MATRIX
-#define QLALIB_MATRIX
+#ifndef ALIGNMENTCALCULATOR_MATRIX
+#define ALIGNMENTCALCULATOR_MATRIX
 
 #include <memory>
 #include <algorithm>
@@ -24,7 +24,7 @@ typedef std::complex<double> cplx;
  *
  */
 
-class matrixComp; ///< Need forward declaration for matrixReal*MatrixComp operation
+class matrixComp; // Need forward declaration for matrixReal*MatrixComp operation
 
 template <typename T> class matrixBase
 {

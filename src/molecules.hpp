@@ -91,6 +91,20 @@ public:
   std::shared_ptr<matrices> createInteractionHamiltonians(std::shared_ptr<basisSubsets> sets);
 };
 
+/**
+ * @brief Field Matter Interaction Matrix Element
+ * @details Calculates the coupling between two |JKM> states in an off resonance field
+ *
+ * @param J J of State 1
+ * @param K K of State 1
+ * @param M M of State 1
+ * @param Q Interaction Quantum Number
+ * @param S Other Interaction Quantum Number
+ * @param j J of State 2
+ * @param k K of State 2
+ * @param m M of State 2
+ * @return Coupling Matrix Element
+ */
 double FMIME (int J, int K, int M, int Q, int S, int j, int k, int m);
 
 

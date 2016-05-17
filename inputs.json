@@ -1,10 +1,10 @@
 {
-  "Jobtype":"nonadiabatic", // "adiabatic" or "nonadiabatic"
+  "Jobtype":"adiabatic", // "adiabatic" or "nonadiabatic"
   "Molecule":
   {
-    "molecule_name":"iodobenzene", // For file management
-    "library_file":"AsymTopMolecules.json", // Optional if molecule info in another file
-    "library_molecule":"iodobenzene", // Molecule to grab from input file
+    "molecule_name":"N2", // For file management
+    "library_file":"Molecules.json", // Optional if molecule info in another file
+    "library_molecule":"N2", // Molecule to grab from input file
     "rotational_temperature": 0.0, //Temperature in Kelvin
     // "polarizability_components":[145.089,103.249,68.833],
     // "rotational_constants":[8.62031e-07,1.14050e-07,1.00708e-07],
@@ -42,7 +42,9 @@
     "basis_list": false, // outputs list of |JKM>
     "coupling_matrix": false, // print portion of off diagonal elements
     "eigenvectors": false, // only supported for adiabatic alignment, coefficients of |JKM>
+    "n_vecs":10, // number of eigenvectors to print
     "density":false, // only supported for adiabatic alignment, outputs real space density of wavefunction or density matrix
+    "chi":0.0, // evaluate density for fixed angle is asymmetric top
     "cos2D":false, //projection of alignment, only supported for linear molecules
     "cos3D":true,
     "cos3DAlt":true,

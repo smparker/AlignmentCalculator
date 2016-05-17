@@ -231,7 +231,7 @@ std::shared_ptr<matrices> symmetricTopMolecule::createFieldFreeHamiltonians(std:
   else
     A = rot_.Ce_;
     C = rot_.Ae_ - rot_.Ce_;
-  {
+  { 
   }
 
   for (auto &set : *sets)

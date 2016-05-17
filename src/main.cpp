@@ -1,4 +1,5 @@
 #include "nonadiabaticPropagator.hpp"
+#include "adiabaticPropagator.hpp"
 
 using namespace std;
 
@@ -17,8 +18,11 @@ int main(int argc, char const *argv[])
     calculation.run();
     calculation.outputBasisStats();
   }
-  // else if (inputs.jobtype_ == JOBTYPE::ADIABATIC)
-  //   adiabaticPropagator calculation(inputs);
-
+  else if (inputs.jobtype_ == JOBTYPE::ADIABATIC)
+  {
+    adiabaticPropagator calculation(inputs);
+    calculation.run();
+    // calculation.outputBasisStats();
+  }
   return(0);
 }

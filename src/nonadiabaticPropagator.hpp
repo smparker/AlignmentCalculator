@@ -28,6 +28,7 @@ public:
   std::vector<pulse> pulses_;
   std::vector<N_Vector> atols_,ys_;
   // std::vector<std::shared_ptr<std::vector<std::pair<int,int>>>> nonzero_indices_;
+  std::shared_ptr<matrices> scratch_matrices_,scratch_ydot_;
   std::vector<void*> cvode_managers_;
   nonadiabaticPropagator(inputParameters &IP);
   void initializeCVODE(inputParameters &IP);
@@ -42,5 +43,19 @@ public:
 int check_flag(void *flagvalue, char *funcname, int opt);
 
 void PrintFinalStats(void *cvode_mem);
+
+inline int row_index(int i, int N )
+{
+    double row = (-2*N - 1 + sqrt( (4*N*(N+1) - 8*(double)i - 7) )) / -2;
+    if( row == (double)(int) row ) row -= 1;
+    return row;
+}
+
+inline int column_index( int i, int N )
+{
+    int row = row_index(i, N);
+    return  i - N * row + row*(row+1) / 2;
+}
+
 
 #endif

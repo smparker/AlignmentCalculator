@@ -20,13 +20,24 @@ nonadiabaticPropagator::nonadiabaticPropagator(inputParameters &IP) :
   initializeOutputs(IP);
   if ( (molecule_->Us_ != nullptr) && (molecule_->invUs_ != nullptr) )
     transformObservables();
+
+  scratch_matrices_ = std::make_shared<matrices>();
+  scratch_ydot_ = std::make_shared<matrices>();
+  for (auto &p : *populations_)
+  {
+    int N = p->size();
+    scratch_matrices_->push_back(std::make_shared<matrixComp>(N,N));
+    scratch_ydot_->push_back(std::make_shared<matrixComp>(N,N));
+  }
 }
 
 void nonadiabaticPropagator::initializeCVODE(inputParameters &IP)
 {
   for (int ii = 0; ii < basisSets_->size(); ii++)
   {
-    int nEq = pow(basisSets_->at(ii)->size(),2)*2;
+    int N = basisSets_->at(ii)->size();
+    // int nEq = pow(N,2)*2;
+    int nEq = N*(N+1); // total size decreased if only half of density matrix is considered
     atols_.push_back(N_VNew_Serial(nEq));
     if (check_flag((void *)atols_.back(), (char *)"N_VNew_Serial", 0))
       throw std::runtime_error("Error allocating space for atol vector");
@@ -81,6 +92,7 @@ int nonadiabaticPropagator::evalRHS(realtype t, N_Vector y, N_Vector ydot, void 
   nonadiabaticPropagator* obj = (nonadiabaticPropagator*)(user_data);
   int ii = obj->index_flag_;
   int N  = obj->basisSets_->at(ii)->size();
+  int nEq = N*(N+1);
   double efield = 0.0;
   for (auto &p : obj->pulses_)
     efield += p.evaluate(t);
@@ -89,8 +101,29 @@ int nonadiabaticPropagator::evalRHS(realtype t, N_Vector y, N_Vector ydot, void 
     totalH = std::make_shared<matrixComp>(*(obj->fieldFreeHamiltonians_->at(ii)) + *(obj->intHamiltonians_->at(ii))*efield);
   else
     totalH = obj->fieldFreeHamiltonians_->at(ii);
-  zgemm3m_("N", "N", N, N, N, cplx(0.0,-1.0), totalH->data(),                                        N, reinterpret_cast<const cplx *>(N_VGetArrayPointer(y)), N, cplx(0.0), reinterpret_cast<cplx *>(N_VGetArrayPointer(ydot)), N);
-  zgemm3m_("N", "N", N, N, N, cplx(0.0,1.0),  reinterpret_cast<const cplx *>(N_VGetArrayPointer(y)), N, totalH->data(),                                        N, cplx(1.0), reinterpret_cast<cplx *>(N_VGetArrayPointer(ydot)), N);
+  for (int jj = 0; jj < nEq/2; jj++)
+  {
+    int i = row_index(jj,N);
+    int j = column_index(jj,N);
+    // std::cout << nEq/2 << " " << jj << " " << i << " " << j << std::endl;
+    obj->scratch_matrices_->at(ii)->element(i,j) = reinterpret_cast<cplx*>(N_VGetArrayPointer(y))[jj];
+    if (i != j)
+      obj->scratch_matrices_->at(ii)->element(j,i) = conj(reinterpret_cast<cplx*>(N_VGetArrayPointer(y))[jj]);
+    // reinterpret_cast<cplx*>(N_VGetArrayPointer(ys_.at(ii)))[jj] = densities_->at(ii)->element(i,j);
+  }
+  zgemm3m_("N", "N", N, N, N, cplx(0.0,-1.0), totalH->data(),                                        N, obj->scratch_matrices_->at(ii)->data(), N, cplx(0.0), obj->scratch_ydot_->at(ii)->data(), N);
+  zgemm3m_("N", "N", N, N, N, cplx(0.0,1.0),  obj->scratch_matrices_->at(ii)->data(), N, totalH->data(),                                        N, cplx(1.0), obj->scratch_ydot_->at(ii)->data(), N);
+  for (int jj = 0; jj < nEq/2; jj++)
+  {
+    int i = row_index(jj,N);
+    int j = column_index(jj,N);
+    reinterpret_cast<cplx*>(N_VGetArrayPointer(ydot))[jj] = obj->scratch_ydot_->at(ii)->element(i,j);
+  }
+
+
+
+  // zgemm3m_("N", "N", N, N, N, cplx(0.0,-1.0), totalH->data(),                                        N, reinterpret_cast<const cplx *>(N_VGetArrayPointer(y)), N, cplx(0.0), reinterpret_cast<cplx *>(N_VGetArrayPointer(ydot)), N);
+  // zgemm3m_("N", "N", N, N, N, cplx(0.0,1.0),  reinterpret_cast<const cplx *>(N_VGetArrayPointer(y)), N, totalH->data(),                                        N, cplx(1.0), reinterpret_cast<cplx *>(N_VGetArrayPointer(ydot)), N);
   // if dissipation needed, add terms here
   return(0);
 }
@@ -123,10 +156,21 @@ void nonadiabaticPropagator::step()
     // if the population is too small, skip this set
     if (densities_->at(ii)->trace().real() < 1.0e-4)
       continue;
-    int nEq = pow(basisSets_->at(ii)->size(),2)*2;
+    // int nEq = pow(basisSets_->at(ii)->size(),2)*2;
+    int N = basisSets_->at(ii)->size();
+    int nEq = N*(N+1);
     flag    = CVodeSetUserData(cvode_managers_.at(ii),(void*)this);
     std::fill_n(&Ith(atols_.at(ii),1), nEq, atol_);
-    std::copy_n(reinterpret_cast<double*>(densities_->at(ii)->data()), nEq, N_VGetArrayPointer(ys_.at(ii)) );
+
+    // std::copy_n(reinterpret_cast<double*>(densities_->at(ii)->data()), nEq, N_VGetArrayPointer(ys_.at(ii)) );
+
+    for (int jj = 0; jj < nEq/2; jj++)
+    {
+      int i = row_index(jj,N);
+      int j = column_index(jj,N);
+      reinterpret_cast<cplx*>(N_VGetArrayPointer(ys_.at(ii)))[jj] = densities_->at(ii)->element(i,j);
+    }
+      // std::cout << "Here" << " " << nEq/2 << " "  << i << " " << j << " " << jj << std::endl;
 
     if (firstRun_)
     {
@@ -147,7 +191,7 @@ void nonadiabaticPropagator::step()
 
     // flag = CVLapackBand(cvode_mem_, nEq,0,10);
     flag = CVBand(cvode_managers_.at(ii),nEq,2,10);
-    // flag = CVDense(cvode_mem_, nEq);
+    // flag = CVDense(cvode_managers_.at(ii), nEq);
     if (check_flag(&flag,(char *)"CVSolver", 1))
       throw std::runtime_error("Error during CVODE step with solver function.");
 
@@ -156,7 +200,13 @@ void nonadiabaticPropagator::step()
     if (check_flag(&flag, (char *)"CVode", 1))
       throw std::runtime_error("Error during CVODE step with CVode function.");
 
-    std::copy_n(N_VGetArrayPointer(ys_.at(ii)), nEq, reinterpret_cast<double *>(densities_->at(ii)->data()));
+    // std::copy_n(N_VGetArrayPointer(ys_.at(ii)), nEq, reinterpret_cast<double *>(densities_->at(ii)->data()));
+    for (int jj = 0; jj < nEq/2; jj++)
+    {
+      int i = row_index(jj,N);
+      int j = column_index(jj,N);
+      densities_->at(ii)->element(i,j) = reinterpret_cast<cplx*>(N_VGetArrayPointer(ys_.at(ii)))[jj];
+    }
   }
   if (firstRun_) firstRun_ = false;
   time_ = tFinal;

@@ -28,34 +28,35 @@ linearMolecule::linearMolecule(inputParameters &IP) :
 
 std::shared_ptr<basisSubsets> linearMolecule::createBasisSets(int JMAX)
 {
-  // Makes basis sets assuming M is conserved and J couples only to other J of the same parity
   auto basis_set = std::make_shared<basisSubsets>();
-  std::map<int,std::shared_ptr<basisSubset>> oddBasisSets, evenBasisSets;
-  // Even J symmetry sets
-  for (int jj = 0; jj <= JMAX; jj+=2)
+  std::map<int,std::shared_ptr<basisSubset>> oJBasisSets, eJBasisSets;
+  int kk = 0;
+  for (int jj = 0; jj <= JMAX; jj++)
   {
-    for (int mm = -1*jj; mm <= jj; mm++)
-    {
-      if (evenBasisSets.find(mm) == evenBasisSets.end())
-        evenBasisSets[mm] = std::make_shared<basisSubset>();
-      evenBasisSets[mm]->push_back( basis(jj,0,mm) );
-    }
-  }
-  // Odd J symmetry sets
-  for (int jj = 1; jj <= JMAX; jj+=2)
-  {
-    for (int mm = -1*jj; mm <= jj; mm++)
-    {
-      if (evenBasisSets.find(mm) == evenBasisSets.end())
-        evenBasisSets[mm] = std::make_shared<basisSubset>();
-      evenBasisSets[mm]->push_back( basis(jj,0,mm) );
-    }
+      if (jj % 2 == 0 && kk % 2 == 0 ) // J even
+      {
+        for (int mm = -1*jj; mm <= jj; mm++)
+        {
+          if ( eJBasisSets.find(mm) == eJBasisSets.end() )
+            eJBasisSets[mm] = std::make_shared<basisSubset>();
+          eJBasisSets[mm]->push_back(basis(jj,0,mm));
+        }
+      }
+      else // J odd
+      {
+        for (int mm = -1*jj; mm <= jj; mm++)
+        {
+          if ( oJBasisSets.find(mm) == oJBasisSets.end() )
+            oJBasisSets[mm] = std::make_shared<basisSubset>();
+          oJBasisSets[mm]->push_back(basis(jj,0,mm));
+        }
+      }
   }
 
   // Append all sets to a single list
-  for (auto set : evenBasisSets)
+  for (auto &set : oJBasisSets)
     basis_set->push_back(set.second);
-  for (auto set : oddBasisSets)
+  for (auto &set : eJBasisSets)
     basis_set->push_back(set.second);
 
   return basis_set;
@@ -350,7 +351,7 @@ asymmetricTopMolecule::asymmetricTopMolecule(inputParameters &IP) :
 
 std::shared_ptr<basisSubsets> asymmetricTopMolecule::createBasisSets(int JMAX)
 {
- auto basis_set = std::make_shared<basisSubsets>();
+  auto basis_set = std::make_shared<basisSubsets>();
   std::map<int,std::shared_ptr<basisSubset>> oKoJBasisSets, oKeJBasisSets, eKoJBasisSets, eKeJBasisSets;
   for (int jj = 0; jj <= JMAX; jj++)
   {
@@ -405,7 +406,8 @@ std::shared_ptr<basisSubsets> asymmetricTopMolecule::createBasisSets(int JMAX)
   for (auto &set : eKeJBasisSets)
     basis_set->push_back(set.second);
 
-  return basis_set;}
+  return basis_set;
+}
 
 std::shared_ptr<matrices> asymmetricTopMolecule::createFieldFreeHamiltonians(std::shared_ptr<basisSubsets> sets)
 {

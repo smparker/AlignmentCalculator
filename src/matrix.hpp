@@ -284,9 +284,10 @@ public:
   matrixComp& operator+=(const matrixComp&);
   matrixComp operator-(const matrixComp&) const;
   matrixComp& operator-=(const matrixComp&);
-  // matrixComp operator|(const matrixComp&) const;
+  matrixComp operator|(const matrixComp&) const;
   // matrixComp operator^(const matrixComp&) const;
   void getEigvals(double* eigVals);
+  std::shared_ptr<matrixComp> transpose() const; ///< \f$ A^T \f$
 
   friend matrixComp matrixReal::operator*(const matrixComp& o) const;
 

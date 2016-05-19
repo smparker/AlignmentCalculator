@@ -448,3 +448,19 @@ void matrixComp::invert()
   zgetrf_(nrows,nrows,data(),nrows,ipiv.data(),info);
   zgetri_(nrows,data(),nrows,ipiv.data(),work.data(),lwork,info);
 }
+
+matrixComp matrixComp::operator|(const matrixComp& o) const
+{
+  assert(nrows == o.nrows);
+  matrixComp out(ncols, o.ncols);
+  zgemm3m_("T","N", ncols, o.ncols, o.nrows, 1.0, data(), nrows, o.data(), o.nrows, 0.0, out.data(), ncols);
+  return out;
+}
+
+std::shared_ptr<matrixComp> matrixComp::transpose() const
+{
+  auto out = make_shared<matrixComp> (ncols,nrows);
+  mkl_zomatcopy_("C","T",nrows,ncols,1.0,data(),nrows,out->data(),ncols);
+  return out;
+}
+

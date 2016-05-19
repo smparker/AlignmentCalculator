@@ -77,7 +77,7 @@ void nonadiabaticPropagator::printOutputs()
 {
   out_file_ << time_/CONSTANTS::AUperFS/1000.0 << "\t";
   for (auto obs : observables_)
-    out_file_ << "\t" << obs->evaluate_(densities_);
+    out_file_ << "\t" << obs->density_evaluate_(densities_);
   out_file_ << std::endl;
 }
 

@@ -1,4 +1,5 @@
 #include "outputs.hpp"
+#include "utilities.hpp"
 
 /**************
   Base Class
@@ -7,7 +8,7 @@
 observable::observable(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians)
 {}
 
-double observable::evaluate_(std::shared_ptr<matrices> densities_)
+double observable::density_evaluate_(std::shared_ptr<matrices> densities_)
 {
   double val = 0.0;
   for (int ii = 0; ii < densities_->size(); ii++)
@@ -17,6 +18,21 @@ double observable::evaluate_(std::shared_ptr<matrices> densities_)
   }
   return val;
 }
+
+double observable::wvfxn_evaluate_(std::shared_ptr<matrices> densities_, std::shared_ptr<arrays> populations_)
+{
+  if (densities_->size() != populations_->size())
+    throw std::runtime_error("Matrix array and population array size mismatch: " + std::to_string(densities_->size()) + " and " + std::to_string(populations_->size()));
+  cplx val = 0.0;
+  for (int ii = 0; ii < densities_->size(); ii++)
+  {
+    matrixComp operatorTemp((*operator_matrix_->at(ii))*(*densities_->at(ii)));
+    for (int jj = 0; jj < operator_matrix_->at(ii)->nc(); jj++)
+      val += (populations_->at(ii)->at(jj))*zdotc_(operatorTemp.nr(),&densities_->at(ii)->element(0,jj),1,&operatorTemp(0,jj),1);
+  }
+  return val.real();
+}
+
 
 /********************
   Derived Observables

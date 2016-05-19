@@ -18,7 +18,8 @@ public:
   std::shared_ptr<matrices> operator_matrix_;
   observable(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
   virtual void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) = 0;
-  virtual double evaluate_(std::shared_ptr<matrices> densities_);
+  virtual double density_evaluate_(std::shared_ptr<matrices> densities_);
+  virtual double wvfxn_evaluate_(std::shared_ptr<matrices> densities_, std::shared_ptr<arrays> populations_);
 };
 
 

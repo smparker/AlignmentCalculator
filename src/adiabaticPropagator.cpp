@@ -44,7 +44,7 @@ void adiabaticPropagator::printOutputs()
 {
   out_file_ << intensity_*CONSTANTS::LASERINTEN << "\t";
   for (auto obs : observables_)
-    out_file_ << "\t" << obs->evaluate_(densities_);
+    out_file_ << "\t" << obs->wvfxn_evaluate_(densities_,populations_);
   out_file_ << std::endl;
 }
 
@@ -54,10 +54,9 @@ void adiabaticPropagator::run()
   {
     intensity_ = intensity_stepper_(intensity_);
     step();
+    printOutputs();
   }
 }
-
-
 
 
 void adiabaticPropagator::step()
@@ -68,50 +67,17 @@ void adiabaticPropagator::step()
   {
     int N = populations_->at(ii)->size();
     // if the population is too small, skip this set
-    if (  std::accumulate(populations_->at(ii)->begin(),populations_->at(ii)->end(),0.0 ) < 1.0e-4)
-      continue;
-    std::shared_ptr<matrixComp> totalH;
-    totalH = std::make_shared<matrixComp>(*(fieldFreeHamiltonians_->at(ii)) + *(intHamiltonians_->at(ii))*intensity_);
+    // if (  std::accumulate(populations_->at(ii)->begin(),populations_->at(ii)->end(),0.0 ) < 1.0e-4)
+    //   continue;
+    auto totalH = std::make_shared<matrixComp>(*(fieldFreeHamiltonians_->at(ii)) + *(intHamiltonians_->at(ii))*intensity_);
 
     auto energies = std::make_shared<std::vector<double>>(N,0.0);
     totalH->diagonalize(energies->data());
-
-
-
     densities_->push_back(totalH);
     eigenenergies_->push_back(energies);
-
-
-    printOutputs();
-
 
     // zgemm3m_("N", "N", N, N, N, cplx(0.0,-1.0), totalH->data(),                                        N, reinterpret_cast<const cplx *>(N_VGetArrayPointer(y)), N, cplx(0.0), reinterpret_cast<cplx *>(N_VGetArrayPointer(ydot)), N);
     // zgemm3m_("N", "N", N, N, N, cplx(0.0,1.0),  reinterpret_cast<const cplx *>(N_VGetArrayPointer(y)), N, totalH->data(),                                        N, cplx(1.0), reinterpret_cast<cplx *>(N_VGetArrayPointer(ydot)), N);
     // // if dissipation needed, add terms here
-
-
   }
 }
-
-#if 0
-
-
-
-
-
-//  Diagonalize
-
-    for (int ii = 0; ii < N; ii++)
-    {
-      partitionSum += partitionArray[ii];
-
-      matrixReal groundState(*basisHamiltonian->getSub(0,ii,N,1));
-      matrixReal product((*basisCosine)*groundState);
-      cosSum       += partitionArray[ii]*ddot_(groundState.nr(), groundState.data(), 1, product.data(), 1);
-
-      matrixReal productEn(backupHamiltonian*groundState);
-      energySum += partitionArray[ii]*ddot_(groundState.nr(), groundState.data(), 1, productEn.data(), 1);
-    }
-  }
-
-#endif

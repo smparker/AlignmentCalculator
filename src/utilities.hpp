@@ -58,6 +58,8 @@ extern "C"
 
  void mkl_domatcopy_(const char*, const char*, const int *, const int *, const double *, const double* , const int *, double* , const int *);
 
+ void mkl_zomatcopy_(const char*, const char*, const int *, const int *, const std::complex<double> *, const std::complex<double>* , const int *, std::complex<double>* , const int *);
+
  void mkl_dcsrgemv_(const char*, const int *, const double *, const int *, const int *, const double *, const double *);
 
  void dgetrf_(const int*, const int *, double* , int* , int* , int*); // LU decomoposition of a general matrix
@@ -131,6 +133,10 @@ namespace
   void mkl_domatcopy_(const char* ordering, const char* trans, const int r, const int c, const double alpha,
                     const double* A, const int nr, double* B, const int nc)
                     {::mkl_domatcopy_(ordering,trans,&r,&c,&alpha,A,&nr,B,&nc);}
+
+  void mkl_zomatcopy_(const char* ordering, const char* trans, const int r, const int c, const std::complex<double> alpha,
+                    const std::complex<double>* A, const int nr, std::complex<double>* B, const int nc)
+                    {::mkl_zomatcopy_(ordering,trans,&r,&c,&alpha,A,&nr,B,&nc);}
 
   double ddot_(const int a, const double* b, const int c, const double* d, const int e) { return ::ddot_(&a,b,&c,d,&e);}
 

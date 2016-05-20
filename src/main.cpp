@@ -22,7 +22,7 @@ int main(int argc, char const *argv[])
   {
     adiabaticPropagator calculation(inputs);
     calculation.run();
-    // calculation.outputBasisStats();
+    calculation.outputBasisStats();
   }
   return(0);
 }

@@ -22,6 +22,34 @@ void propagatorBase::initialize_()
   partition_function_    = molecule_->partition_function_;
   std::cout << "Partition function at " << temperature_ << "K is " << partition_function_ << std::endl;
   densities_             = molecule_->initializeDensities(populations_);
+  removeSmallPopulations();
+}
+
+void propagatorBase::removeSmallPopulations()
+{
+  // if population for a basis subset is below a threshold, remove from calculation
+  std::vector<bool> isPopulated(populations_->size(),false);
+  for (int ii = 0; ii < populations_->size(); ii++)
+    if (std::accumulate(populations_->at(ii)->begin(), populations_->at(ii)->end(), 0.0) > 1.0e-6)
+      isPopulated[ii] = true;
+
+  // Removes starting from the end of the list to avoid index shifting
+  for (int ii = isPopulated.size()-1; ii >= 0; ii--)
+  {
+    if (!isPopulated[ii])
+    {
+      basisSets_->erase(basisSets_->begin()+ii);
+      fieldFreeHamiltonians_->erase(fieldFreeHamiltonians_->begin()+ii);
+      intHamiltonians_->erase(intHamiltonians_->begin()+ii);
+      populations_->erase(populations_->begin()+ii);
+      densities_->erase(densities_->begin()+ii);
+      if (molecule_->Us_ != nullptr)
+      {
+        molecule_->Us_->erase(molecule_->Us_->begin()+ii);
+        molecule_->invUs_->erase(molecule_->invUs_->begin()+ii);
+      }
+    }
+  }
 }
 
 MOLSYM propagatorBase::determineSymmetry(inputParameters &IP)

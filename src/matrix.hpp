@@ -230,16 +230,16 @@ public:
   double variance() const; ///<\f$ \frac{|A|^2}{N} \f$
   double operator%(const matrixReal& o) const; ///< Dot product for vectors with one column
 
-  matrixReal kron(matrixReal &o) const; ///< \f$ A \otimes A\f$, very inefficient
+  matrixReal kron(matrixReal &o) const; ///< \f$ A \otimes A\f$, very slow
 
-  /// Returns pointer to submatrix
+  /// Returns pointer to sub matrix
   std::shared_ptr<matrixReal> getSub(int ii, int jj, int kk, int ll) const
   {
     return getSub_impl<matrixReal>(ii,jj,kk,ll);
   }
 
   void ax_plus_y(const double a, matrixReal &o); ///< \f$ cA+B \f$
-  void invert();
+  void invert(); ///< Calculate the inverse of the matrix in-place
 
 ///@}
 };
@@ -252,9 +252,7 @@ std::ostream &operator<<(std::ostream &out, const matrixBase <T> &o)
   for (int row = 0; row < std::min(10,int(o.nrows)); row++)
   {
     for (int col = 0; col < std::min(10,int(o.ncols)); col++)
-    {
       out << std::setprecision(3) << o(row,col) << "\t";
-    }
     out << "\n";
   }
   out << std::endl;
@@ -272,11 +270,11 @@ template <typename T> unsigned int matrixBase<T>::memSize = 0;
 class matrixComp : public matrixBase<cplx>
 {
 public:
-  matrixComp(const int nr, const int nc);
-  matrixComp(const matrixComp&);
-  matrixComp(matrixComp&&);
+  matrixComp(const int nr, const int nc); ///< Empty Matrix constructor
+  matrixComp(const matrixComp&); ///< copy constructor
+  matrixComp(matrixComp&&); ///< move constructor
 
-//Matrix-Matrix operations
+//Matrix-Matrix operator overloads
   matrixComp& operator=(const matrixComp&);
   matrixComp operator*(const matrixComp&) const;
   matrixComp& operator*=(const matrixComp&);
@@ -286,26 +284,43 @@ public:
   matrixComp& operator-=(const matrixComp&);
   matrixComp operator|(const matrixComp&) const;
   // matrixComp operator^(const matrixComp&) const;
-  void getEigvals(double* eigVals);
+
+
+  void getEigvals(double* eigVals); ///< Calculate eigenvalues without eigenvectors
   std::shared_ptr<matrixComp> transpose() const; ///< \f$ A^T \f$
 
+  /// Enables real*complex matrix multiplication
   friend matrixComp matrixReal::operator*(const matrixComp& o) const;
 
 //Scalar-Matrix Operations
-  matrixComp operator*(const cplx&) const;
-  matrixComp operator/(const cplx&) const;
-  matrixComp& operator*=(const cplx&);
-  matrixComp& operator/=(const cplx&);
+  matrixComp operator*(const cplx&) const; ///< Multiplication operator overload
+  matrixComp operator/(const cplx&) const; ///< Division operator overload
+  matrixComp& operator*=(const cplx&); ///< in-place Multiplication operator overload
+  matrixComp& operator/=(const cplx&); ///< in-place Division operator overload
 
+/**
+ * @brief Submatrix
+ * @details Return matrix object containing a portion of the original
+ *
+ * @param ii upper left row coordinate
+ * @param jj upper left column coordinate
+ * @param kk number of rows to copy
+ * @param ll number of columns to copy
+ * @return new matrix
+ */
   std::shared_ptr<matrixComp> getSub(int ii, int jj, int kk, int ll) const
   {
     return getSub_impl<matrixComp>(ii,jj,kk,ll);
   }
+
   void diagonalize(double* eigVals); ///< Full Diagonalization with dsyev
-  void invert();
+  void invert(); ///< Calculate the inverse of the matrix in place
 };
 
+/// Print entire matrix to file with optional x and y coordinates included
 void printMatrix(matrixComp &o, std::string filename, double *x = nullptr, double *y = nullptr);
+
+/// Print entire matrix to file with optional x and y coordinates included
 void printMatrix(matrixReal &o, std::string filename, double *x = nullptr, double *y = nullptr);
 
 

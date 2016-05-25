@@ -15,15 +15,16 @@
 class observable
 {
 public:
-  std::string id_tag_;
-  std::shared_ptr<matrices> operator_matrix_;
-  observable(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
-  virtual void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) = 0;
-  virtual double density_evaluate_(std::shared_ptr<matrices> densities_);
-  virtual double wvfxn_evaluate_(std::shared_ptr<matrices> densities_, std::shared_ptr<arrays> populations_);
+  std::string id_tag_; ///< Unique identifier tag for printing to first line of output file
+  std::shared_ptr<matrices> operator_matrix_; ///< Matrix representation of observable
+  observable(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians); ///< Constructor
+  virtual void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) = 0; ///< Initialize the observable matrix
+  virtual double density_evaluate_(std::shared_ptr<matrices> densities_); ///< Calculate expectation value given a density matrix
+  virtual double wvfxn_evaluate_(std::shared_ptr<matrices> densities_, std::shared_ptr<arrays> populations_); ///< Calculate expectation value given a set of wavefunctions stored in a matrix
 };
 
 
+/// \f$  \langle \cos^2 \theta_{3D} \rangle = \langle \cos^2 (\hat z \cdot \hat Z ) \rangle \f$
 class obsCosTheta3D : public observable
 {
 public:
@@ -31,6 +32,7 @@ public:
   void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
 };
 
+/// \f$  \langle \cos^2 \theta_{2D} \rangle \f$
 class obsCosTheta2D : public observable
 {
 public:
@@ -38,6 +40,7 @@ public:
   void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
 };
 
+/// \f$  \langle \hat H \rangle \f$
 class obsEnergy : public observable
 {
 public:
@@ -45,6 +48,7 @@ public:
   void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
 };
 
+/// \f$  \langle \cos^2 \theta^\prime_{3D} \rangle = \langle \cos^2 (\hat x \cdot \hat Z ) \rangle \f$
 class obsCosThetaAlt : public observable
 {
 public:
@@ -52,6 +56,7 @@ public:
   void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
 };
 
+/// \f$  \langle J^2 \rangle \f$
 class obsJ : public observable
 {
 public:
@@ -59,6 +64,7 @@ public:
   void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
 };
 
+/// \f$  \langle K^2 \rangle \f$
 class obsK : public observable
 {
 public:
@@ -66,6 +72,7 @@ public:
   void initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians);
 };
 
+/// \f$  \langle M \rangle \f$
 class obsM : public observable
 {
 public:

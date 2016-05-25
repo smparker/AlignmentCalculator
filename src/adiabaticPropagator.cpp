@@ -62,26 +62,17 @@ void adiabaticPropagator::run()
   }
 }
 
-
 void adiabaticPropagator::step()
 {
   eigenenergies_ = std::make_shared<arrays>();
   densities_ = std::make_shared<matrices>(); // Clear this array to use as storage space
   for (int ii = 0; ii < basisSets_->size(); ii++)
   {
-    int N = populations_->at(ii)->size();
-    // if the population is too small, skip this set
-    // if (  std::accumulate(populations_->at(ii)->begin(),populations_->at(ii)->end(),0.0 ) < 1.0e-4)
-    //   continue;
     auto totalH = std::make_shared<matrixComp>(*(fieldFreeHamiltonians_->at(ii)) + *(intHamiltonians_->at(ii))*intensity_);
 
-    auto energies = std::make_shared<std::vector<double>>(N,0.0);
+    auto energies = std::make_shared<std::vector<double>>(populations_->at(ii)->size(),0.0);
     totalH->diagonalize(energies->data());
     densities_->push_back(totalH);
     eigenenergies_->push_back(energies);
-
-    // zgemm3m_("N", "N", N, N, N, cplx(0.0,-1.0), totalH->data(),                                        N, reinterpret_cast<const cplx *>(N_VGetArrayPointer(y)), N, cplx(0.0), reinterpret_cast<cplx *>(N_VGetArrayPointer(ydot)), N);
-    // zgemm3m_("N", "N", N, N, N, cplx(0.0,1.0),  reinterpret_cast<const cplx *>(N_VGetArrayPointer(y)), N, totalH->data(),                                        N, cplx(1.0), reinterpret_cast<cplx *>(N_VGetArrayPointer(ydot)), N);
-    // // if dissipation needed, add terms here
   }
 }

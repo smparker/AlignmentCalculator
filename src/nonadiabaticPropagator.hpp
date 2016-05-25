@@ -14,36 +14,41 @@
 #include <sundials/sundials_dense.h> /* definitions DlsMat DENSE_ELEM */
 #include <sundials/sundials_types.h> /* definition of type realtype */
 
-
+/**
+ * @brief Nonadiabatic Calculation Propagator
+ * @details Class for managing data and outputs for aligning molecules in a nonadiabatic field (laser pulse)
+ *
+ */
 class nonadiabaticPropagator : public propagatorBase
 {
 public:
-  bool firstRun_;
-  int noutputs_;
-  int index_flag_;
-  double t0_, dt_, time_,tFinal_;
-  double atol_,rtol_;
-  std::string output_file_name_;
-  std::ofstream out_file_;
-  std::vector<pulse> pulses_;
-  std::vector<N_Vector> atols_,ys_;
-  // std::vector<std::shared_ptr<std::vector<std::pair<int,int>>>> nonzero_indices_;
-  std::shared_ptr<matrices> scratch_matrices_,scratch_ydot_;
-  std::vector<void*> cvode_managers_;
-  nonadiabaticPropagator(inputParameters &IP);
-  void initializeCVODE(inputParameters &IP);
-  void initializeOutputs(inputParameters &IP);
-  static int evalRHS(realtype t, N_Vector y, N_Vector ydot, void *user_data);
-  void step();
-  void run();
-  void printOutputs();
+  bool firstRun_; ///< Flag for propagator to identify if the calculation has run previously
+  int noutputs_; ///< Number of output times
+  int index_flag_; ///< Flag for passing information to the cvode propagator
+  double t0_; ///< Initial time
+  double dt_; ///< Time Step
+  double time_; ///< Current Time
+  double tFinal_; ///< Final Time
+  double atol_,rtol_; ///< absolute and relative error tolerances
+  std::string output_file_name_; ///< Name of the output file
+  std::ofstream out_file_; ///< Output file stream
+  std::vector<pulse> pulses_; ///< vector containing all pulse objects (for calculating pulse trains)
+  std::vector<N_Vector> atols_,ys_; ///< CVode tolerance and RHS vector storage
+  std::shared_ptr<matrices> scratch_matrices_,scratch_ydot_; ///< Useful scratch space to avoid reallocation of memory
+  std::vector<void*> cvode_managers_; ///< CVode objects
+  nonadiabaticPropagator(inputParameters &IP); ///< Constructor
+  void initializeCVODE(inputParameters &IP); ///< Initialize all differential equation solvers
+  void initializeOutputs(inputParameters &IP); ///< Initialize output streams
+  static int evalRHS(realtype t, N_Vector y, N_Vector ydot, void *user_data); ///< Evaluate the right hand side function (Liouville von Neumann equation)
+  void step(); ///< Step density matrices by time step
+  void run(); ///< Run full simulation
+  void printOutputs(); ///< Print all observables to output file
 };
 
-
+/// Function for checking the proper return of CVode functions
 int check_flag(void *flagvalue, char *funcname, int opt);
 
-void PrintFinalStats(void *cvode_mem);
-
+/// row helper function for one-to-one correspondence between matrix coordinate and upper triangular storage scheme
 inline int row_index(int i, int N )
 {
     double row = (-2*N - 1 + sqrt( (4*N*(N+1) - 8*(double)i - 7) )) / -2;
@@ -51,6 +56,7 @@ inline int row_index(int i, int N )
     return row;
 }
 
+/// column helper function for one-to-one correspondence between matrix coordinate and upper triangular storage scheme
 inline int column_index( int i, int N )
 {
     int row = row_index(i, N);

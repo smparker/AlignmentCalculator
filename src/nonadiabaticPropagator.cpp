@@ -215,8 +215,6 @@ void nonadiabaticPropagator::step()
   time_ = tFinal;
 }
 
-
-
 /**************************
   CVODE Helper functions
 **************************/
@@ -246,37 +244,4 @@ int check_flag(void *flagvalue, char *funcname, int opt)
     return(1); }
 
   return(0);
-}
-
-void PrintFinalStats(void *cvode_mem)
-{
-  long int nst, nfe, nsetups, nje, nfeLS, nni, ncfn, netf, nge;
-  int flag;
-
-  flag = CVodeGetNumSteps(cvode_mem, &nst);
-  check_flag(&flag, (char *)"CVodeGetNumSteps", 1);
-  flag = CVodeGetNumRhsEvals(cvode_mem, &nfe);
-  check_flag(&flag, (char *)"CVodeGetNumRhsEvals", 1);
-  flag = CVodeGetNumLinSolvSetups(cvode_mem, &nsetups);
-  check_flag(&flag, (char *)"CVodeGetNumLinSolvSetups", 1);
-  flag = CVodeGetNumErrTestFails(cvode_mem, &netf);
-  check_flag(&flag, (char *)"CVodeGetNumErrTestFails", 1);
-  flag = CVodeGetNumNonlinSolvIters(cvode_mem, &nni);
-  check_flag(&flag, (char *)"CVodeGetNumNonlinSolvIters", 1);
-  flag = CVodeGetNumNonlinSolvConvFails(cvode_mem, &ncfn);
-  check_flag(&flag, (char *)"CVodeGetNumNonlinSolvConvFails", 1);
-
-  flag = CVDlsGetNumJacEvals(cvode_mem, &nje);
-  check_flag(&flag, (char *)"CVDlsGetNumJacEvals", 1);
-  flag = CVDlsGetNumRhsEvals(cvode_mem, &nfeLS);
-  check_flag(&flag, (char *)"CVDlsGetNumRhsEvals", 1);
-
-  flag = CVodeGetNumGEvals(cvode_mem, &nge);
-  check_flag(&flag, (char *)"CVodeGetNumGEvals", 1);
-
-  printf("\nFinal Statistics:\n");
-  printf("nst = %-6ld nfe  = %-6ld nsetups = %-6ld nfeLS = %-6ld nje = %ld\n",
-   nst, nfe, nsetups, nfeLS, nje);
-  printf("nni = %-6ld ncfn = %-6ld netf = %-6ld nge = %ld\n \n",
-   nni, ncfn, netf, nge);
 }

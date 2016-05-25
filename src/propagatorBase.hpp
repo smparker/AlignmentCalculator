@@ -33,13 +33,13 @@ public:
    * @brief Outputs basis information to file
    * @details Prints file at end of propagation including a list of all basis states, energies, and thermal populations
    */
-  void outputBasisStats();
-  MOLSYM determineSymmetry(inputParameters &IP);
-  void initialize_();
-  virtual void initializeOutputs(inputParameters &IP) = 0;
-  virtual void printOutputs() = 0;
-  virtual void transformObservables();
-  void removeSmallPopulations();
+  void outputBasisStats(); ///< Print populations and energies of all basis functions
+  MOLSYM determineSymmetry(inputParameters &IP); ///< Determine the symmetry based on the rotational constants
+  void initialize_(); ///< Create basis functions, calculate Hamiltonians and populations
+  virtual void initializeOutputs(inputParameters &IP) = 0; ///< Create all output objects
+  virtual void printOutputs() = 0; ///< Evaluate and print outputs
+  virtual void transformObservables(); ///< Transform observables from |JKM> basis to other if field-free Hamiltonian has off-diagonal terms
+  void removeSmallPopulations(); ///< If the thermal population of a basis subset is smaller than a predetermined threshold, remove it to speed up calculation
 };
 
 #endif

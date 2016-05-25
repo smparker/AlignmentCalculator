@@ -9,11 +9,11 @@
 class pulse
 {
 public:
-	double peakIntensity_;
-	double sigma_;
-	double t0_;
-	pulse (double, double, double);
-	double evaluate(double);
+	double peakIntensity_; ///< Maximum intensity of Gaussian pulse
+	double sigma_; ///< Variance of Gaussian function, determined from FWHM
+	double t0_; ///< Time of peak maximum
+	pulse (double, double, double); ///< Constructor
+	double evaluate(double t); ///< Evaluate the field intensity at time t
 };
 
 #endif

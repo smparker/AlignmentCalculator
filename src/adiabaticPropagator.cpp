@@ -31,6 +31,10 @@ void adiabaticPropagator::initializeOutputs(inputParameters &IP)
   if (IP.output_J_) observables_.push_back(std::make_shared<obsJ>(basisSets_,fieldFreeHamiltonians_));
   if (IP.output_K_) observables_.push_back(std::make_shared<obsK>(basisSets_,fieldFreeHamiltonians_));
   if (IP.output_M_) observables_.push_back(std::make_shared<obsM>(basisSets_,fieldFreeHamiltonians_));
+  if (IP.output_cos2D_ && (symmetry_ == MOLSYM::LINEAR))
+    observables_.push_back(std::make_shared<obsM>(basisSets_,fieldFreeHamiltonians_));
+  else if (IP.output_cos2D_ && (symmetry_ != MOLSYM::LINEAR))
+    std::cout << "Output for the cos^2 projection in 2D not supported for molecules of nonlinear symmetry. Please set the output to false to supress this message." << std::endl;
 
   // Print data identifiers
   out_file_ << "# Intensity(W/cm^2)";

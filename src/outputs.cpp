@@ -168,6 +168,29 @@ void obsM::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<m
   }
 }
 
+
+obsCosTheta2D::obsCosTheta2D(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
+  observable(basisSets,fieldFreeHamiltonians)
+{
+  id_tag_ = "<cos^2 theta>_2D";
+  initialize_(basisSets,fieldFreeHamiltonians);
+}
+
+void obsCosTheta2D::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians)
+{
+  operator_matrix_ = std::make_shared<matrices>();
+  for (auto &set : *basisSets)
+  {
+    int N = set->size();
+    operator_matrix_->push_back(std::make_shared<matrixComp>(N,N));
+    for (int ii = 0; ii < N; ii++)
+      for (int jj = 0; jj < N; jj++)
+          operator_matrix_->back()->element(ii,jj) = cos2D(set->at(ii).J, set->at(ii).M, set->at(jj).J,set->at(jj).M);
+  }
+}
+
+
+
  // Prints out the basis set from a basisSubsets object
  // for (auto &a : *basis_set)
  //  {

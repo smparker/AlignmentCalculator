@@ -15,6 +15,8 @@
 class adiabaticPropagator : public propagatorBase
 {
 public:
+  int print_n_vecs_;
+  int print_n_vals_;
   double intensity_; ///< Initial intensity and variable for holding the current field strength
   double dItn_; ///< intensity increment
   double itn_final_; ///< Final intensity
@@ -56,6 +58,14 @@ public:
    * @details Calculates all observables and prints them to the output file
    */
   void printOutputs();
+
+  /**
+   * @brief prints lowest eigenvalues
+   * @details Looks through all eigenvalue arrays, finds lowest and returns as string
+   *
+   * @return string of values tab delimited
+   */
+  std::string print_lowest_eigenvals();
 };
 
 #endif

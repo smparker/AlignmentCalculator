@@ -1,6 +1,7 @@
 #include "adiabaticPropagator.hpp"
 #include "utilities.hpp"
 #include "constants.hpp"
+#include <sstream>
 
 adiabaticPropagator::adiabaticPropagator(inputParameters &IP) :
   propagatorBase(IP),
@@ -8,6 +9,8 @@ adiabaticPropagator::adiabaticPropagator(inputParameters &IP) :
   dItn_(IP.intensity_increment_),
   itn_final_(IP.final_intensity_)
 {
+  print_n_vecs_ = IP.output_eigenvectors_;
+  print_n_vals_ = IP.output_eigenvalues_;
   if (IP.add_increment_)
     intensity_stepper_ = [&](double a){return a+dItn_;};
   else
@@ -16,7 +19,6 @@ adiabaticPropagator::adiabaticPropagator(inputParameters &IP) :
   if ( (molecule_->Us_ != nullptr) && (molecule_->invUs_ != nullptr) )
     transformObservables();
 }
-
 
 void adiabaticPropagator::initializeOutputs(inputParameters &IP)
 {
@@ -49,6 +51,8 @@ void adiabaticPropagator::printOutputs()
   out_file_ << intensity_*CONSTANTS::LASERINTEN << "\t";
   for (auto obs : observables_)
     out_file_ << "\t" << obs->wvfxn_evaluate_(densities_,populations_);
+  if (print_n_vals_ > 0)
+    out_file_ << print_lowest_eigenvals();
   out_file_ << std::endl;
 }
 
@@ -76,3 +80,26 @@ void adiabaticPropagator::step()
     eigenenergies_->push_back(energies);
   }
 }
+
+std::string adiabaticPropagator::print_lowest_eigenvals()
+{
+  std::vector<double> vals;
+  for (auto &ens : *eigenenergies_)
+  {
+// Grabs energies
+    if (ens->size() < print_n_vals_)
+      vals.insert(vals.end(), ens->begin(), ens->end());
+    else
+      vals.insert(vals.end(), ens->begin(), ens->begin()+print_n_vals_);
+// Sort new global list
+    std::sort(vals.begin(),vals.end());
+// if too big, remove end
+    if (vals.size() > print_n_vals_)
+      vals.erase(vals.begin() + print_n_vals_, vals.end());
+  }
+  std::stringstream out_string;
+  for (auto &v : vals)
+    out_string << std::scientific << std::setprecision(6) << "\t" << v;
+  return out_string.str();
+}
+

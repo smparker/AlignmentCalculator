@@ -90,8 +90,8 @@ public:
   bool add_increment_; ///< Adds step rather than multiplies if true
   bool output_density_; ///< Outputs probability density of ground state in theta and phi (chi = 0 by default)
   double chi_; ///< change chi to number other than zero
-  bool output_eigenvectors_; ///< print eigenvector information (first 10)
-  int n_eigenvalues_; ///< number of eigenvalues to output
+  int output_eigenvectors_; ///< print eigenvector information (first 10)
+  int output_eigenvalues_; ///< number of eigenvalues to output
 ///@}
 
 

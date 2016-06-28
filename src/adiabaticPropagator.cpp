@@ -42,6 +42,11 @@ void adiabaticPropagator::initializeOutputs(inputParameters &IP)
   out_file_ << "# Intensity(W/cm^2)";
   for (auto obs : observables_)
     out_file_ << "\t" << obs->id_tag_;
+  if (print_n_vals_ > 0)
+  {
+    for (int ii = 0; ii < print_n_vals_; ii++)
+      out_file_ << "\tEigenvalue" << ii;
+  }
   out_file_ << std::endl;
 }
 

@@ -106,8 +106,6 @@ void obsCosThetaAlt::initialize_(std::shared_ptr<basisSubsets> basisSets,std::sh
   }
 }
 
-
-
 obsJ::obsJ(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
   observable(basisSets,fieldFreeHamiltonians)
 {
@@ -167,7 +165,6 @@ void obsM::initialize_(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<m
         operator_matrix_->back()->element(ii,ii) = set->at(ii).M;
   }
 }
-
 
 obsCosTheta2D::obsCosTheta2D(std::shared_ptr<basisSubsets> basisSets,std::shared_ptr<matrices> fieldFreeHamiltonians) :
   observable(basisSets,fieldFreeHamiltonians)

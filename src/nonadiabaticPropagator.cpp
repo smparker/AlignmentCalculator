@@ -70,7 +70,7 @@ void nonadiabaticPropagator::initializeOutputs(inputParameters &IP)
     std::cout << "Output for the cos^2 projection in 2D not supported for molecules of nonlinear symmetry. Please set the output to false to supress this message." << std::endl;
 
   // Print data identifiers
-  out_file_ << "#Time (ps)";
+  out_file_ << "#Time (ps)\tIntensity (W/cm^2)";
   for (auto obs : observables_)
     out_file_ << "\t" << obs->id_tag_;
   out_file_ << std::endl;
@@ -78,7 +78,10 @@ void nonadiabaticPropagator::initializeOutputs(inputParameters &IP)
 
 void nonadiabaticPropagator::printOutputs()
 {
-  out_file_ << time_/CONSTANTS::AUperFS/1000.0 << "\t";
+  double efield = 0.0;
+  for (auto &p : pulses_)
+    efield += p.evaluate(time_);
+  out_file_ << time_/CONSTANTS::AUperFS/1000.0 << "\t" << efield*CONSTANTS::LASERINTEN << "\t";
   for (auto obs : observables_)
     out_file_ << "\t" << obs->density_evaluate_(densities_);
   out_file_ << std::endl;

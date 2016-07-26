@@ -30,7 +30,7 @@
   },
   "Numerical":
   {
-    "maximum_J":50,
+    "maximum_J":40,
     "n_outputs":500, // only needed for nonadiabatic calculations
     "maximum_time": 20.0, // ps
     "atol":1.0e-8, // DiffEq Absolute Tolerance

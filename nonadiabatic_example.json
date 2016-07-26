@@ -1,0 +1,38 @@
+{
+  "Jobtype":"nonadiabatic",
+  "Molecule":
+  {
+    "molecule_name":"N2", // Tag for output file names
+    "library_file":"Molecules.json", // Optional if molecule info in another file
+    "library_molecule":"N2", // Molecule to grab from input file
+    "rotational_temperature": 0.0, //Temperature in Kelvin
+  },
+  "Field":
+  {
+    "pulses":
+    [
+      {
+        "pulse_max_intensity":1.0e13, // W/cm^2
+        "pulse_fwhm":500.0, // fs
+        "pulse_center":2000.0 //fs
+      }
+    ]
+  },
+  "Numerical":
+  {
+    "maximum_J":40, // Max J angular momentum quantum number
+    "n_outputs":500,
+    "maximum_time": 20.0, // ps
+    "atol":1.0e-8, // DiffEq Absolute Tolerance
+    "rtol":1.0e-6, // DiffEq Relative Tolerance
+  },
+  "Outputs":
+  {
+    "cos2D":false, //projection of alignment, only supported for linear molecules
+    "cos3D":true,
+    "energy":true,
+    "expJ":true,
+    "expK":true,
+    "expM":true
+  }
+}

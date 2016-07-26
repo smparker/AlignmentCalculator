@@ -1,0 +1,30 @@
+{
+  "Jobtype":"adiabatic",
+  "Molecule":
+  {
+    "molecule_name":"iodobenzene", // For file management
+    "rotational_temperature": 0.0, //Temperature in Kelvin
+    "polarizability_components":[145.089,103.249,68.833],
+    "rotational_constants":[8.62031e-07,1.14050e-07,1.00708e-07],
+  },
+  "Field":
+  {
+    "initial_intensity":1.0e8, // W/cm^2
+    "final_intensity":1.0e14, // W/cm^2
+    "intensity_increment":1.33352127842,
+  },
+  "Numerical":
+  {
+    "maximum_J":40,
+  },
+  "Outputs":
+  {
+    "basis_list": false, // outputs list of |JKM>
+    "eigenvalues":5,
+    "cos3D":true,
+    "energy":true,
+    "expJ":true,
+    "expK":true,
+    "expM":true
+  }
+}

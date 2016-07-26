@@ -90,7 +90,10 @@ void nonadiabaticPropagator::printOutputs()
 void nonadiabaticPropagator::run()
 {
   for (int ii = 0; ii < noutputs_; ii++)
+  {
+    printOutputs();
     step();
+  }
 }
 
 int nonadiabaticPropagator::evalRHS(realtype t, N_Vector y, N_Vector ydot, void *user_data)
@@ -156,7 +159,7 @@ void nonadiabaticPropagator::step()
   double tInit  = time_;
   double tFinal = time_ + dt_;
   realtype t;
-  printOutputs();
+  // printOutputs();
   for (int ii = 0; ii < basisSets_->size(); ii++)
   {
     // if the population is too small, skip this set
@@ -212,6 +215,7 @@ void nonadiabaticPropagator::step()
       int i = row_index(jj,N);
       int j = column_index(jj,N);
       densities_->at(ii)->element(i,j) = reinterpret_cast<cplx*>(N_VGetArrayPointer(ys_.at(ii)))[jj];
+      densities_->at(ii)->element(j,i) = conj(densities_->at(ii)->element(i,j));
     }
   }
   if (firstRun_) firstRun_ = false;

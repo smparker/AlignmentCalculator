@@ -1,29 +1,36 @@
-# README #
+# Alignment Calculator v 1.0.0 #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Alignment Calculator simulates the adiabatic and nonadiabatic alignment of rigid molecules subjected to intense linearly polarized light.
 
-### What is this repository for? ###
+### Required software ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* [Intel MKL](https://software.intel.com/en-us/intel-mkl) or other BLAS/LAPACK installation
+* [BOOST] (http://www.boost.org)
+* [Sundials / CVode] (http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software) (will be optional in future update)
+* [GNU Scientific Library](https://www.gnu.org/software/gsl/)
 
-### How do I get set up? ###
+### Building ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+To build, simply run the configure script and link any libraries not in your default path, then make.
 
-### Contribution guidelines ###
+* ./configure CPPFLAGS=-I/opt/local/include -I/usr/local/include LDFLAGS=-L/opt/local/lib -lsundials_cvode -lsundials_nvecserial
+* make
 
-* Writing tests
-* Code review
-* Other guidelines
+If problems arise, the configure file may be rebuilt using automake/autoconf. Use the following: 
 
-### Who do I talk to? ###
+* aclocal
+* autoheader
+* automake -a
+* autoconf
 
-* Repo owner or admin
-* Other community or team contact
+Then follow the first set of instructions. 
+
+### Running the Code  ###
+
+* Run the executable followed by the name of the input file (i.e. "./alignmentcalculator inputs.json")
+* Example input files are provided for convenience 
+
+
+### Questions or Comments? ###
+
+Message me and I'll respond as soon as I'm able

@@ -5,8 +5,8 @@ Alignment Calculator simulates the adiabatic and nonadiabatic alignment of rigid
 ### Required software ###
 
 * [Intel MKL](https://software.intel.com/en-us/intel-mkl) or other BLAS/LAPACK installation
-* [BOOST] (http://www.boost.org)
-* [Sundials / CVode] (http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software) (will be optional in future update)
+* [BOOST](http://www.boost.org)
+* [Sundials / CVode](http://computation.llnl.gov/projects/sundials-suite-nonlinear-differential-algebraic-equation-solvers/sundials-software) (will be optional in future update)
 * [GNU Scientific Library](https://www.gnu.org/software/gsl/)
 
 ### Building ###

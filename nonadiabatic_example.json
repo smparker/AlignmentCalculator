@@ -5,7 +5,7 @@
     "molecule_name":"N2", // Tag for output file names
     "library_file":"Molecules.json", // Optional if molecule info in another file
     "library_molecule":"N2", // Molecule to grab from input file
-    "rotational_temperature": 0.0, //Temperature in Kelvin
+    "rotational_temperature": 0.0 //Temperature in Kelvin
   },
   "Field":
   {
@@ -24,7 +24,7 @@
     "n_outputs":500,
     "maximum_time": 20.0, // ps
     "atol":1.0e-8, // DiffEq Absolute Tolerance
-    "rtol":1.0e-6, // DiffEq Relative Tolerance
+    "rtol":1.0e-6  // DiffEq Relative Tolerance
   },
   "Outputs":
   {
